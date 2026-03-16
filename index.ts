@@ -1,15 +1,14 @@
 /**
- * PROYECTO: Conversor de Monedas Profesional
- * Módulo: 01 - TypeScript
- * Estudiante: Katherine Gonzales
- * * Descripción: Este programa convierte divisas, mantiene un historial 
- * y utiliza tipos de datos avanzados de TypeScript.
+ * PROJECT: Professional Currency Converter - BYU-Idaho
+ * Module: 01 - TypeScript
+ * Student: Katherine Gonzales
+ * Description: Currency conversion system featuring transaction history, 
+ * error handling (exceptions), recursion, and asynchronous programming.
  */
 
-// 1. INTERFACES (El "Contrato" de datos)
-// Aquí definimos qué forma deben tener nuestros objetos para que no haya errores.
+// 1. INTERFACES (Data Contracts)
 interface CurrencyRates {
-    [code: string]: number; // Decimos que la clave es un texto (USD) y el valor un número (3.78)
+    [code: string]: number;
 }
 
 interface LogEntry {
@@ -21,104 +20,125 @@ interface LogEntry {
     result: number;
 }
 
-// 2. LA CLASE (El "Cerebro" del programa)
-// Usar una clase demuestra un nivel avanzado de programación.
+// 2. THE CLASS (Core Logic)
 class CurrencyConverter {
-    private rates: CurrencyRates; // Almacena las tasas de cambio
-    private history: LogEntry[] = []; // Un arreglo para guardar todas las conversiones
-    private nextId: number = 1; // Un contador para darle un ID a cada conversión
+    private rates: CurrencyRates;
+    private history: LogEntry[] = [];
+    private nextId: number = 1;
 
     constructor() {
-        // Definimos las tasas manuales (Base: 1 Dólar)
+        // Exchange rates based on 1 USD
         this.rates = {
-            "USD": 1.0,
-            "PEN": 3.78, // Sol Peruano
-            "EUR": 0.92, // Euro
-            "MXN": 17.05, // Peso Mexicano
-            "CLP": 970.0, // Peso Chileno
-            "BRL": 4.98,  // Real Brasileño
-            "GBP": 0.79   // Libra Esterlina
+            "USD": 1.0, "PEN": 3.78, "EUR": 0.92, "MXN": 17.05,
+            "CLP": 970.0, "BRL": 4.98, "GBP": 0.79
         };
     }
 
     /**
-     * Función principal: Realiza el cálculo y guarda en el historial
-     * Usa tipado fuerte (: number, : string)
+     * REQUIREMENT: Exception Handling (throw)
+     * Performs the conversion and validates input.
      */
-    public convert(amount: number, from: string, to: string): void {
-        console.log(`\n> Intentando convertir: ${amount} ${from} a ${to}...`);
-
-        // VALIDACIÓN: Si el usuario pone un número negativo
+    public convert(amount: number, from: string, to: string): number {
         if (amount <= 0) {
-            console.error("❌ Error: La cantidad debe ser un número positivo.");
-            return;
+            throw new Error("Amount must be a positive number.");
         }
 
-        // VALIDACIÓN: Si la moneda no existe en nuestra lista
         if (!this.rates[from] || !this.rates[to]) {
-            console.error("❌ Error: Una de las monedas ingresadas no es válida.");
-            return;
+            throw new Error(`Currency not supported. Valid keys: ${Object.keys(this.rates).join(", ")}`);
         }
 
-        // LÓGICA MATEMÁTICA
-        // Primero convertimos a Dólares (nuestra base) y luego a la moneda destino
+        // Mathematical Logic
         const amountInUsd = amount / this.rates[from];
         const convertedAmount = amountInUsd * this.rates[to];
         const finalResult = Number(convertedAmount.toFixed(2));
 
-        // GUARDAR EN EL HISTORIAL
-        // Creamos un objeto que representa esta operación
+        // Save to History (List requirement)
         const newRecord: LogEntry = {
             id: this.nextId++,
             timestamp: new Date().toLocaleString(),
-            from: from,
-            to: to,
-            amount: amount,
+            from, to, amount,
             result: finalResult
         };
 
-        this.history.push(newRecord); // Lo metemos al arreglo
-        console.log(`✅ ¡Éxito! ${amount} ${from} equivalen a ${finalResult} ${to}`);
+        this.history.push(newRecord);
+        return finalResult;
     }
 
     /**
-     * Función para mostrar el historial acumulado
+     * Requirement: Lists
+     * Displays all stored transactions using .forEach
      */
     public showFullHistory(): void {
-        console.log("\n--- 📜 HISTORIAL DE CONVERSIONES DE KATHERINE ---");
+        console.log("\n--- 📜 TRANSACTION HISTORY (KATHERINE GONZALES) ---");
         if (this.history.length === 0) {
-            console.log("No se han realizado operaciones.");
+            console.log("No transactions found.");
         } else {
             this.history.forEach(item => {
                 console.log(`ID: ${item.id} | ${item.timestamp} | ${item.amount} ${item.from} -> ${item.result} ${item.to}`);
             });
         }
-        console.log("--------------------------------------------------\n");
-    }
-
-    /**
-     * Función para listar las monedas que el programa entiende
-     */
-    public listCurrencies(): void {
-        console.log("Monedas aceptadas actualmente:");
-        console.log(Object.keys(this.rates).join(" - "));
     }
 }
 
-// 3. EJECUCIÓN DEL PROGRAMA
-// Aquí es donde "encendemos" nuestro conversor
-const myConverter = new CurrencyConverter();
+// 3. ADDITIONAL FEATURES
 
-console.log("=== BIENVENIDO AL CONVERSOR TS SEMANA 2 ===");
-myConverter.listCurrencies();
+/**
+ * REQUIREMENT: Asynchronous Function (Async/Await)
+ * Simulates a delay while fetching external exchange rates
+ */
+async function loadSystemData(): Promise<void> {
+    console.log("Fetching latest exchange rates from server...");
+    return new Promise(resolve => setTimeout(resolve, 1500));
+}
 
-// Realizamos varias pruebas para llenar el historial
-myConverter.convert(100, "PEN", "USD");  // 100 Soles a Dólares
-myConverter.convert(50, "USD", "EUR");   // 50 Dólares a Euros
-myConverter.convert(1500, "MXN", "PEN"); // 1500 Pesos a Soles
-myConverter.convert(-10, "USD", "PEN");  // Esto debería dar ERROR
+/**
+ * REQUIREMENT: RECURSION
+ * Processes an array of conversion requests by calling itself
+ */
+function processRecursive(list: any[], index: number, converter: CurrencyConverter): void {
+    // Base Case
+    if (index >= list.length) {
+        console.log("\n>>> Batch processing finished.");
+        return;
+    }
 
-// Mostramos todo lo que pasó
-myConverter.showFullHistory();
+    const item = list[index];
+    try {
+        const res = converter.convert(item.amount, item.from, item.to);
+        console.log(`[SUCCESS] ${item.amount} ${item.from} = ${res} ${item.to}`);
+    } catch (e: any) {
+        // Exception Handling: Catching the error so the recursion doesn't stop
+        console.log(`[ERROR] At index ${index}: ${e.message}`);
+    }
 
-console.log("Gracias por usar mi aplicación de TypeScript.");
+    // Recursive Call
+    processRecursive(list, index + 1, converter);
+}
+
+// 4. MAIN PROGRAM EXECUTION
+async function main() {
+    const myConverter = new CurrencyConverter();
+    
+    // Asynchronous call demonstration
+    await loadSystemData();
+
+    console.log("\n=== WELCOME TO KATHERINE'S TS CONVERTER ===");
+
+    // Batch conversion data for recursion demonstration
+    const batchOrders = [
+        { amount: 100, from: "PEN", to: "USD" },
+        { amount: 50, from: "USD", to: "EUR" },
+        { amount: -20, from: "USD", to: "PEN" }, // This will trigger an Exception
+        { amount: 1500, from: "MXN", to: "PEN" }
+    ];
+
+    // Start Recursion
+    processRecursive(batchOrders, 0, myConverter);
+
+    // Show final history
+    myConverter.showFullHistory();
+    console.log("\nThank you for using my TypeScript application.");
+}
+
+// Run the application
+main();

@@ -7,7 +7,7 @@
 }
 
 body {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: linear-gradient(135deg, #f5f7fa 0%, #65eaf3 100%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -33,7 +33,7 @@ body {
 }
 
 h1 {
-    color: #2c3e50;
+    color: #153b62;
     font-size: 1.8rem;
     text-align: center;
     margin-bottom: 0.5rem;
@@ -66,24 +66,19 @@ input, select {
     font-size: 1rem;
     transition: border-color 0.3s ease;
 }
-
 input:focus, select:focus {
     outline: none;
     border-color: #3498db;
 }
-
-/* 5. CONTENEDOR DE SELECCIÓN (DE/A) */
 .selection-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
 }
-
-/* 6. EL BOTÓN PROFESIONAL */
 button {
     width: 100%;
     padding: 15px;
-    background-color: #3498db;
+    background-color: #4396ea;
     color: white;
     border: none;
     border-radius: 12px;
@@ -95,7 +90,7 @@ button {
 }
 
 button:hover {
-    background-color: #2980b9;
+    background-color: #e83ba6;
     transform: translateY(-2px);
 }
 
@@ -151,4 +146,66 @@ button:active {
     border-radius: 8px;
     font-size: 0.85rem;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+/* History list items */
+.history-item {
+    list-style: none;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Successful result text */
+.result-success {
+    color: #27ae60;
+}
+
+/* Error message text */
+.result-error {
+    color: #e74c3c;
+}
+
+
+/* ---- Exchange Rates Table ---- */
+.rates-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.rates-table th {
+    background-color: #90e297;
+    color: white;
+    padding: 12px;
+    text-align: left;
+}
+
+.rates-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.rates-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Highlights the USD base row */
+.base-currency-row {
+    background-color: #eafaf1;
+    font-weight: bold;
+}
+
+/* Back button */
+.back-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #406284;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+.back-btn:hover {
+    background-color: #d5eb35;
+    color: #2c3e50;
 }

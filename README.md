@@ -1,31 +1,31 @@
-# TypeScript Currency Converter - Module Submission
+# Currency Converter Pro - CSE 310 Module 02
 
 ## Author
+
 Katherine Gonzales
+[BYU-Idaho CSE 310 Course](https://github.com/Kattniu/ts-currency-converter.git)
 
 ## Project Description
-This is a professional Currency Converter built with TypeScript. It allows users to convert between multiple world currencies, handles input errors, and maintains a detailed log of every transaction. 
 
-This project was developed for the CSE 310 course at BYU-Idaho to demonstrate mastery of TypeScript fundamentals and advanced concepts.
+Currency Converter Pro is a multi-page web application built with TypeScript and HTML.
+It allows users to register an account, convert between seven world currencies,
+view live exchange rates, and keep a full transaction history.
+
+This project was developed for the CSE 310 course at BYU-Idaho to demonstrate
+mastery of TypeScript fundamentals including interfaces, classes, DOM manipulation,
+and dynamic content generation.
 
 ## Development Environment
-* Language: TypeScript
-* Runtime: Node.js
-* Compiler: tsc
-* Tools: Visual Studio Code
 
-## Execution Instructions
-1. Install dependencies (if any): `npm install`
-2. Compile the TypeScript code: `tsc index.ts`
-3. Run the JavaScript file: `node index.js`
+- Language: TypeScript
+- Compiler: tsc (TypeScript Compiler)
+- Tools: Visual Studio Code
+- Browser: Any modern browser (Chrome, Firefox, Edge)
 
-## Module Requirements Checklist
-### Basic Requirements
-* [x] Display output to the terminal
-* [x] Use Classes
-* [x] Use Lists (Arrays)
-* [x] Recursion: Implemented in `procesarLoteRecursivo` function.
-* [x] Asynchronous functions: Used `async/await` and `Promises` in the initialization.
+## TypeScript Concepts Demonstrated
 
-### Additional Requirements
-* [x] Demonstrate throwing and handling exceptions: Used `try/catch` and `throw new Error` for validation.
+- **Interfaces** — CurrencyRates, LogEntry, User, CurrencyInfo
+- **Classes** — CurrencyConverter, UserRegistry
+- **DOM Manipulation** — Dynamic lists, tables, and results
+- **Error Handling** — try/catch and throw new Error
+- **Type Safety** — Strict typing on all variables and functions

@@ -1,9 +1,3 @@
-/**
- * PROJECT: Professional Currency Converter Web App - BYU-Idaho
- * Module: 02 - Web Apps
- * Student: Katherine Gonzales
- */
-
 // ============================================================
 // 1. INTERFACES - Define the shape/structure of our data
 // ============================================================

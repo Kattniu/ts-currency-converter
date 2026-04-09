@@ -7,7 +7,7 @@
 }
 
 body {
-    background: linear-gradient(135deg, #f5f7fa 0%, #65eaf3 100%);
+    background: linear-gradient(135deg, #f5f7fa 0%, #ddaef5 100%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -33,7 +33,7 @@ body {
 }
 
 h1 {
-    color: #153b62;
+    color: #6710a5;
     font-size: 1.8rem;
     text-align: center;
     margin-bottom: 0.5rem;
@@ -78,7 +78,7 @@ input:focus, select:focus {
 button {
     width: 100%;
     padding: 15px;
-    background-color: #4396ea;
+    background-color: #479df3;
     color: white;
     border: none;
     border-radius: 12px;
@@ -90,7 +90,7 @@ button {
 }
 
 button:hover {
-    background-color: #e83ba6;
+    background-color: #54dcf4;
     transform: translateY(-2px);
 }
 
@@ -126,7 +126,7 @@ button:active {
 
 .history-section h2 {
     font-size: 1.2rem;
-    color: #2c3e50;
+    color: #3a6fa5;
     margin-bottom: 1rem;
     border-bottom: 2px solid #3498db;
     display: inline-block;
@@ -151,17 +151,17 @@ button:active {
 .history-item {
     list-style: none;
     padding: 10px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #e7e3e3;
 }
 
 /* Successful result text */
 .result-success {
-    color: #27ae60;
+    color: #41c478;
 }
 
 /* Error message text */
 .result-error {
-    color: #e74c3c;
+    color: #ef4b39;
 }
 
 
@@ -199,13 +199,13 @@ button:active {
     display: inline-block;
     margin-top: 20px;
     padding: 10px 20px;
-    background-color: #406284;
+    background-color: #ff8bc5;
     color: white;
     text-decoration: none;
     border-radius: 6px;
 }
 
 .back-btn:hover {
-    background-color: #d5eb35;
+    background-color: #e9fe4f;
     color: #2c3e50;
 }

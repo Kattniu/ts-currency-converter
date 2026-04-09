@@ -1,3 +1,4 @@
+"use strict";
 /**
  * FILE: register.ts
  * PURPOSE: Handles user registration and saves to MongoDB via API
@@ -63,7 +64,7 @@ function updateUsersUI() {
     });
 }
 // --- Event Listener: fires when Register button is clicked ---
-registerBtn === null || registerBtn === void 0 ? void 0 : registerBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
+registerBtn === null || registerBtn === void 0 ? void 0 : registerBtn.addEventListener("click", () => __awaiter(void 0, void 0, void 0, function* () {
     const fullName = fullNameInput.value;
     const email = emailInput.value;
     const password = passwordInput.value;

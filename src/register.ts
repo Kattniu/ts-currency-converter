@@ -1,135 +1,91 @@
 /**
- * PROJECT: Professional Currency Converter Web App - BYU-Idaho
- * Module: 02 - Web Apps
- * Student: Katherine Gonzales
- * File: register.ts - Handles user registration with validation
+ * FILE: register.ts
+ * PURPOSE: Handles user registration and saves to MongoDB via API
  */
 
 // ============================================================
-// 1. INTERFACES - Define the shape of our data
+// 1. INTERFACES
 // ============================================================
 
 // Defines the structure of a registered user
 interface User {
-    id: number;
     fullName: string;
     email: string;
     createdAt: string;
 }
 
 // ============================================================
-// 2. CLASS - Contains all registration logic
+// 2. VALIDATION - Checks form fields before sending to server
 // ============================================================
 
-class UserRegistry {
+// --- Function: validates all form fields ---
+function validate(fullName: string, email: string, password: string): string[] {
+    const errors: string[] = [];
 
-    // --- Attributes ---
-    private users: User[] = [];     // Array to store registered users in memory
-    private nextId: number = 1;     // Auto-increments ID for each new user
-
-    // --- Method: validates all form fields before registering ---
-    public validate(fullName: string, email: string, password: string): string[] {
-        const errors: string[] = [];
-
-        // Check that full name is not empty
-        if (fullName.trim() === "") {
-            errors.push("Full name is required.");
-        }
-
-        // Check that email contains @ and a dot
-        if (!email.includes("@") || !email.includes(".")) {
-            errors.push("Please enter a valid email address.");
-        }
-
-        // Check that password has at least 6 characters
-        if (password.length < 6) {
-            errors.push("Password must be at least 6 characters.");
-        }
-
-        return errors;
+    if (fullName.trim() === "") {
+        errors.push("Full name is required.");
     }
 
-    // --- Method: registers a new user and saves it to the array ---
-    public register(fullName: string, email: string): User {
-
-        // Check if email is already registered
-        const exists = this.users.find(u => u.email === email);
-        if (exists) {
-            throw new Error("This email is already registered.");
-        }
-
-        // Create a new user object
-        const newUser: User = {
-            id: this.nextId++,
-            fullName,
-            email,
-            createdAt: new Date().toLocaleTimeString()
-        };
-
-        // Save user to array
-        this.users.push(newUser);
-        return newUser;
+    if (!email.includes("@") || !email.includes(".")) {
+        errors.push("Please enter a valid email address.");
     }
 
-    // --- Method: returns all registered users ---
-    public getUsers(): User[] {
-        return this.users;
+    if (password.length < 6) {
+        errors.push("Password must be at least 6 characters.");
     }
+
+    return errors;
 }
 
 // ============================================================
-// 3. DOM LOGIC - Connects the class to the HTML interface
+// 3. DOM LOGIC - Connects form to the API
 // ============================================================
 
-// Create one instance of the registry
-const registry = new UserRegistry();
-
-// Select all HTML elements we need
-const registerBtn    = document.getElementById("registerBtn")   as HTMLButtonElement;
-const fullNameInput  = document.getElementById("fullName")      as HTMLInputElement;
-const emailInput     = document.getElementById("email")         as HTMLInputElement;
-const passwordInput  = document.getElementById("password")      as HTMLInputElement;
-const errorDisplay   = document.getElementById("errorDisplay")  as HTMLDivElement;
+// Select all HTML elements
+const registerBtn    = document.getElementById("registerBtn")    as HTMLButtonElement;
+const fullNameInput  = document.getElementById("fullName")       as HTMLInputElement;
+const emailInput     = document.getElementById("email")          as HTMLInputElement;
+const passwordInput  = document.getElementById("password")       as HTMLInputElement;
+const errorDisplay   = document.getElementById("errorDisplay")   as HTMLDivElement;
 const successDisplay = document.getElementById("successDisplay") as HTMLDivElement;
-const usersList      = document.getElementById("usersList")     as HTMLUListElement;
+const usersList      = document.getElementById("usersList")      as HTMLUListElement;
 
-// --- Function: updates the registered users list in the UI ---
-function updateUsersUI(): void {
-    usersList.innerHTML = ""; // Clear before re-rendering
+// --- Function: loads and displays all registered users from MongoDB ---
+async function updateUsersUI(): Promise<void> {
+    try {
+        const response = await fetch("http://localhost:3000/api/users");
+        const users: User[] = await response.json();
 
-    registry.getUsers().forEach(user => {
-        const li = document.createElement("li");
+        usersList.innerHTML = "";
 
-        // Use CSS class for styling
-        li.className = "history-item";
-
-        // Build the list item with user details
-        li.innerHTML = `
-            👤 <strong>${user.fullName}</strong> — ${user.email}
-            <br>
-            <small>Registered at: ${user.createdAt}</small>
-        `;
-
-        usersList.appendChild(li);
-    });
+        users.forEach(user => {
+            const li = document.createElement("li");
+            li.className = "history-item";
+            li.innerHTML = `
+                👤 <strong>${user.fullName}</strong> — ${user.email}
+                <br>
+                <small>Registered at: ${user.createdAt}</small>
+            `;
+            usersList.appendChild(li);
+        });
+    } catch (error) {
+        console.error("Could not load users:", error);
+    }
 }
 
 // --- Event Listener: fires when Register button is clicked ---
-registerBtn?.addEventListener("click", () => {
+registerBtn?.addEventListener("click", async () => {
 
-    // Read values from the form inputs
     const fullName = fullNameInput.value;
     const email    = emailInput.value;
     const password = passwordInput.value;
 
     // Clear previous messages
-    errorDisplay.innerHTML  = "";
+    errorDisplay.innerHTML   = "";
     successDisplay.innerHTML = "";
 
-    // Run validation first
-    const errors = registry.validate(fullName, email, password);
-
-    // If there are errors, show them and stop
+    // Validate fields first
+    const errors = validate(fullName, email, password);
     if (errors.length > 0) {
         errorDisplay.innerHTML = errors
             .map(e => `<p class="result-error">⚠️ ${e}</p>`)
@@ -137,25 +93,44 @@ registerBtn?.addEventListener("click", () => {
         return;
     }
 
-    // Try to register the user
     try {
-        const newUser = registry.register(fullName, email);
+        // Send data to MongoDB via our API
+        const response = await fetch("http://localhost:3000/api/users", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ fullName, email, password })
+        });
 
-        // Show success message
+        const data = await response.json();
+
+        if (!response.ok) {
+            // Show error from server
+            errorDisplay.innerHTML = `<p class="result-error">⚠️ ${data.error}</p>`;
+            return;
+        }
+
+        // Show success and redirect to login
         successDisplay.innerHTML = `
-            <p class="result-success">✅ Welcome, ${newUser.fullName}! Your account has been created.</p>
+            <p class="result-success">✅ Welcome ${data.user.fullName}! Redirecting to login...</p>
         `;
 
-        // Clear form inputs after successful registration
+        // Clear form
         fullNameInput.value  = "";
         emailInput.value     = "";
         passwordInput.value  = "";
 
-        // Refresh the users list
+        // Refresh users list
         updateUsersUI();
 
-    } catch (error: any) {
-        // Show error if email already exists
-        errorDisplay.innerHTML = `<p class="result-error">⚠️ ${error.message}</p>`;
+        // Redirect to login after 2 seconds
+        setTimeout(() => {
+            window.location.href = "login.html";
+        }, 2000);
+
+    } catch (error) {
+        errorDisplay.innerHTML = `<p class="result-error">⚠️ Could not connect to server. Make sure the server is running.</p>`;
     }
 });
+
+// Load users when page opens
+updateUsersUI();

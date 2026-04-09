@@ -1,10 +1,6 @@
-"use strict";
-/**
- * PROJECT: Professional Currency Converter Web App - BYU-Idaho
- * Module: 02 - Web Apps
- * Student: Katherine Gonzales
- * File: rates.ts - Dynamically displays exchange rate table
- */
+// ============================================================
+// 1. DATA - Currency rates and their full names
+// ============================================================
 // Array of all supported currencies with their details
 const currencies = [
     { code: "USD", name: "US Dollar", rate: 1.00, flag: "🇺🇸" },

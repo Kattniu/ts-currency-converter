@@ -1,10 +1,6 @@
-"use strict";
-/**
- * PROJECT: Professional Currency Converter Web App - BYU-Idaho
- * Module: 02 - Web Apps
- * Student: Katherine Gonzales
- * File: index.ts - Welcome page logic
- */
+// ============================================================
+// 1. DATA - Available currencies to display on welcome page
+// ============================================================
 // List of all supported currencies
 const availableCurrencies = [
     { flag: "🇺🇸", code: "USD", name: "US Dollar" },

@@ -1,15 +1,30 @@
+/**
+ * ARCHIVO: converter.ts
+ * PROPÓSITO: Maneja la lógica de conversión de monedas
+ * y verifica que el usuario esté conectado
+ */
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 // ============================================================
-// 1. INTERFACES - Define the shape/structure of our data
-// ============================================================
-// ============================================================
-// 2. CLASS - Contains all the conversion business logic
+// 2. CLASE - Contiene toda la lógica de conversión
+// Una clase es como una caja que agrupa datos y funciones
+// relacionadas entre sí
 // ============================================================
 class CurrencyConverter {
-    // --- Constructor: runs once when the object is created ---
+    // CONSTRUCTOR - Se ejecuta automáticamente cuando
+    // se crea la clase con "new CurrencyConverter()"
     constructor() {
-        this.history = []; // Array to store conversion history
-        this.nextId = 1; // Auto-increments ID for each record
-        // All rates are relative to 1 USD (US Dollar as base currency)
+        this.history = []; // Lista de conversiones
+        this.nextId = 1; // ID que sube automáticamente
+        // Todas las tasas están basadas en 1 USD
+        // Ejemplo: 1 USD = 3.90 PEN
         this.rates = {
             "USD": 1.0,
             "PEN": 3.90,
@@ -20,84 +35,158 @@ class CurrencyConverter {
             "GBP": 0.79
         };
     }
-    // --- Method: converts an amount from one currency to another ---
+    // MÉTODO convert - Convierte una cantidad de una moneda a otra
+    // "public" significa que puede llamarse desde fuera de la clase
     convert(amount, from, to) {
-        // Validation: amount must be a positive number
+        // Validación 1: la cantidad debe ser un número positivo
+        // isNaN significa "¿esto NO es un número?"
         if (isNaN(amount) || amount <= 0) {
             throw new Error("Please enter a valid positive amount.");
         }
-        // Validation: both currencies must exist in our rates table
+        // Validación 2: ambas monedas deben existir en nuestra lista
         if (!this.rates[from] || !this.rates[to]) {
             throw new Error("Currency not supported.");
         }
-        // Step 1: Convert the amount to USD first (our base currency)
+        // CÁLCULO en 3 pasos:
+        // Paso 1: convertimos a USD primero (moneda base)
+        // Ejemplo: 100 PEN / 3.90 = 25.64 USD
         const amountInUsd = amount / this.rates[from];
-        // Step 2: Convert from USD to the target currency
+        // Paso 2: convertimos de USD a la moneda destino
+        // Ejemplo: 25.64 USD * 0.87 = 22.31 EUR
         const convertedAmount = amountInUsd * this.rates[to];
-        // Step 3: Round to 2 decimal places for clean display
+        // Paso 3: redondeamos a 2 decimales para que se vea limpio
         const finalResult = Number(convertedAmount.toFixed(2));
-        // Save this conversion as a new record in history
+        // Guardamos la conversión en el historial
         const newRecord = {
-            id: this.nextId++,
-            timestamp: new Date().toLocaleTimeString(),
-            from,
-            to,
-            amount,
-            result: finalResult
+            id: this.nextId++, // 1, 2, 3...
+            timestamp: new Date().toLocaleTimeString(), // "10:35:22 AM"
+            from, // "PEN"
+            to, // "USD"
+            amount, // 100
+            result: finalResult // 25.64
         };
+        // push() agrega el nuevo registro al final del array
         this.history.push(newRecord);
         return finalResult;
     }
-    // --- Method: returns the full conversion history array ---
+    // MÉTODO getHistory - Devuelve todas las conversiones guardadas
     getHistory() {
         return this.history;
     }
 }
 // ============================================================
-// 3. DOM LOGIC - Connects the class to the HTML interface
+// 3. DOM - Conecta la clase con la interfaz HTML
 // ============================================================
-// Create one instance of the converter (this holds our data)
+// Creamos UNA sola instancia de la clase
+// Aquí viven todos los datos de las conversiones
 const myConverter = new CurrencyConverter();
-// Select all the HTML elements we need to interact with
+// Seleccionamos todos los elementos HTML que necesitamos
+// getElementById busca el elemento por su id en el HTML
 const btn = document.getElementById("convertBtn");
 const amountInput = document.getElementById("amount");
 const fromSelect = document.getElementById("fromCurrency");
 const toSelect = document.getElementById("toCurrency");
 const resultDisplay = document.getElementById("resultDisplay");
 const historyList = document.getElementById("historyList");
-// --- Function: rebuilds the history list in the UI ---
+// ============================================================
+// 4. FUNCIÓN - Redibuja la lista del historial en pantalla
+// Se llama cada vez que se hace una nueva conversión
+// ============================================================
 function updateHistoryUI() {
-    historyList.innerHTML = ""; // Clear the current list before re-rendering
+    // Borramos la lista actual antes de redibujarla
+    historyList.innerHTML = "";
+    // Recorremos cada conversión guardada
     myConverter.getHistory().forEach(item => {
+        // Creamos un elemento <li> nuevo
         const li = document.createElement("li");
-        // Use a CSS class instead of inline styles (cleaner separation)
+        // Usamos una clase CSS para los estilos
+        // (mejor que poner estilos directo en el TypeScript)
         li.className = "history-item";
-        // Build the list item content with the conversion details
+        // Llenamos el <li> con los datos de la conversión
         li.innerHTML = `
             <strong>${item.amount} ${item.from}</strong> ➡ 
             ${item.result} ${item.to} 
             <br> 
             <small>${item.timestamp}</small>
         `;
+        // Agregamos el <li> a la lista <ul> del HTML
         historyList.appendChild(li);
     });
 }
-// --- Event Listener: fires when the Convert button is clicked ---
-btn === null || btn === void 0 ? void 0 : btn.addEventListener("click", () => {
+// ============================================================
+// 5. EVENTO - Se ejecuta cuando el usuario hace clic en Convert
+// ============================================================
+btn === null || btn === void 0 ? void 0 : btn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
     try {
-        // Read the current values from the form inputs
-        const amount = parseFloat(amountInput.value);
-        const from = fromSelect.value;
-        const to = toSelect.value;
-        // Run the conversion using our class method
+        // Leemos los valores del formulario
+        const amount = parseFloat(amountInput.value); // texto → número
+        const from = fromSelect.value; // "PEN"
+        const to = toSelect.value; // "USD"
+        // Llamamos al método convert de nuestra clase
         const result = myConverter.convert(amount, from, to);
-        // Show the result in the result box (DOM manipulation)
+        // Mostramos el resultado en pantalla en verde
         resultDisplay.innerHTML = `<h2 class="result-success">${result} ${to}</h2>`;
-        // Refresh the history list to include the new entry
+        // Actualizamos la lista del historial
         updateHistoryUI();
+        yield fetch("http://localhost:3000/api/conversions", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ from, to, amount, result })
+        });
     }
     catch (error) {
-        // If something went wrong, display the error message in red
+        // Si algo sale mal mostramos el error en rojo
         resultDisplay.innerHTML = `<p class="result-error">${error.message}</p>`;
     }
-});
+}));
+// ============================================================
+// 6. SESIÓN - Verifica que el usuario esté conectado
+// Las llaves {} evitan conflictos de nombres con otros archivos
+// ============================================================
+{
+    // Buscamos en localStorage si hay un usuario conectado
+    // localStorage guarda datos aunque cambies de página
+    const loggedUser = localStorage.getItem("loggedUser");
+    // Si NO hay usuario conectado mandamos al login
+    if (!loggedUser) {
+        window.location.href = "login.html";
+    }
+    // Seleccionamos el botón de logout
+    const logoutBtn = document.getElementById("logoutBtn");
+    // Cuando hace clic en Logout:
+    // 1. Borramos el usuario de localStorage
+    // 2. Mandamos al usuario al login
+    logoutBtn === null || logoutBtn === void 0 ? void 0 : logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("loggedUser");
+        window.location.href = "login.html";
+    });
+}
+// --- Function: loads conversion history from MongoDB ---
+function loadHistoryFromDB() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            // Pedimos todas las conversiones guardadas en MongoDB
+            const response = yield fetch("http://localhost:3000/api/conversions");
+            const conversions = yield response.json();
+            // Limpiamos la lista antes de mostrar
+            historyList.innerHTML = "";
+            // Dibujamos cada conversión en la lista
+            conversions.forEach((item) => {
+                const li = document.createElement("li");
+                li.className = "history-item";
+                li.innerHTML = `
+                <strong>${item.amount} ${item.from}</strong> ➡ 
+                ${item.result} ${item.to} 
+                <br> 
+                <small>${item.timestamp}</small>
+            `;
+                historyList.appendChild(li);
+            });
+        }
+        catch (error) {
+            console.error("Could not load history:", error);
+        }
+    });
+}
+// Cargamos el historial cuando la página abre
+loadHistoryFromDB();

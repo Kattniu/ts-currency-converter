@@ -1,3 +1,4 @@
+"use strict";
 /**
  * ARCHIVO: register.ts
  * PROPÓSITO: Maneja el registro de usuarios y los guarda
@@ -110,7 +111,7 @@ function updateUsersUI() {
 // hace clic en "Create Account"
 // "async" es necesario porque usamos "await" dentro
 // ============================================================
-registerBtn === null || registerBtn === void 0 ? void 0 : registerBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
+registerBtn === null || registerBtn === void 0 ? void 0 : registerBtn.addEventListener("click", () => __awaiter(void 0, void 0, void 0, function* () {
     // El "?" significa "solo si el botón existe en el HTML"
     // Leemos los valores actuales de cada campo del formulario
     const fullName = fullNameInput.value;

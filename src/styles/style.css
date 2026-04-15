@@ -1,4 +1,4 @@
-/* 1. CONFIGURACIÓN GENERAL */
+
 * {
     margin: 0;
     padding: 0;
@@ -17,13 +17,13 @@ body {
 
 /* 2. CONTENEDOR PRINCIPAL (FLEXBOX) */
 .container {
+    width: 95%;          /* En celulares pequeños, ocupa casi toda la pantalla */
+    max-width: 450px;    /* Pero en PC, nunca crece más de 450px */
+    margin: 0 auto;      /* Centra el contenedor horizontalmente */
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    width: 100%;
-    max-width: 450px;
+    gap: 1.5rem;
 }
-
 /* 3. TARJETA DEL CONVERSOR */
 .converter-card {
     background: #ffffff;
@@ -75,7 +75,7 @@ input:focus, select:focus {
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
 }
-button {
+button:not(.pass-btn) {
     width: 100%;
     padding: 15px;
     background-color: #479df3;
@@ -89,15 +89,47 @@ button {
     margin-top: 1rem;
 }
 
-button:hover {
+button:not(.pass-btn):hover {
     background-color: #54dcf4;
     transform: translateY(-2px);
 }
 
-button:active {
+button:not(.pass-btn):active {
     transform: translateY(0);
 }
-
+.welcome-box, .info-box {
+    background-color: #f8f9fa; /* Un gris muy clarito */
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border-left: 5px solid #f693f3; /* Una línea morada elegante al lado */
+}
+.info-box h3 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #6710a5; ;
+}
+/*Index.html boton estilo*/
+.main-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: #479df3;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+.main-btn:hover {
+    background-color: #54dcf4;
+}
+.nav-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
 /* 7. CAJA DE RESULTADOS */
 .result-box {
     margin-top: 2rem;
@@ -208,4 +240,103 @@ button:active {
 .back-btn:hover {
     background-color: #e9fe4f;
     color: #2c3e50;
+}
+
+
+/*register password */
+.password-container {
+    position: relative;
+    width: 100%;
+}
+.password-container input {
+    width: 100%;
+    padding-right: 45px;
+}
+
+
+/*el ojo de la password*/
+.pass-btn {
+    all: unset; /* resetea TODO */
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: #888;
+}
+
+/* Hover tipo app */
+.toggle-btn:hover {
+    color: #333;
+}
+
+/* Click */
+.toggle-btn:active {
+    transform: translateY(-50%) scale(0.9);
+}
+
+/* Quitar estilos feos al hacer focus */
+.toggle-btn:focus {
+    outline: none;
+}
+
+
+
+
+/* Solo aparece cuando tiene contenido */
+.message-display {
+    margin-top: 10px;
+    text-align: center;
+    min-height: 0;        /* ← no ocupa espacio si está vacío */
+    padding: 0;
+    background: none;     /* ← sin fondo gris */
+}
+
+.message-display:not(:empty) {
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+
+
+
+/* Esto solo se aplica cuando la pantalla mide más de 768px (Tablets y PC) */
+@media (min-width: 768px) {
+    body {
+        padding: 40px; /* Más espacio alrededor en pantallas grandes */
+    }
+
+    .converter-card {
+        padding: 3rem; /* Tarjetas un poco más amplias para PC */
+    }
+
+    h1 {
+        font-size: 2.2rem; /* Título un poco más grande en PC */
+    }
+}
+
+/* Ajustes específicos para celulares muy pequeños */
+@media (max-width: 380px) {
+    .selection-container {
+        grid-template-columns: 1fr; /* En celulares mini, los selectores van uno arriba del otro */
+    }
+    
+    h1 {
+        font-size: 1.5rem; /* Título más pequeño para que no se corte */
+    }
+}
+
+button, .main-btn, .back-btn {
+    user-select: none; /* Evita que se resalte el texto al tocar rápido */
+    -webkit-tap-highlight-color: transparent; /* Quita el cuadro azul feo al tocar en Android */
 }

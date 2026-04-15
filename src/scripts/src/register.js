@@ -183,6 +183,9 @@ updateUsersUI();
 // Cuando el usuario hace clic en el ojito 👁️
 // ============================================================
 const togglePassword = document.getElementById("togglePassword");
+// Forzamos que empiece en View por si acaso
+if (togglePassword)
+    togglePassword.textContent = "View";
 togglePassword === null || togglePassword === void 0 ? void 0 : togglePassword.addEventListener("click", () => {
     // Leemos el tipo actual del campo contraseña
     // Si es "password" → los caracteres se ven como ****
@@ -193,7 +196,5 @@ togglePassword === null || togglePassword === void 0 ? void 0 : togglePassword.a
     // "text" → "password" (oculta la contraseña)
     passwordInput.type = type;
     // Cambiamos el emoji del botón según el estado
-    // 👁️ cuando la contraseña está oculta (normal)
-    // 🙈 cuando la contraseña está visible
-    togglePassword.textContent = type === "password" ? "👁️" : "🙈";
+    togglePassword.textContent = type === "password" ? "View" : "Hide";
 });

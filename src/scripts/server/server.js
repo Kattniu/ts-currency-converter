@@ -38,7 +38,7 @@ function startServer() {
     return __awaiter(this, void 0, void 0, function* () {
         yield (0, db_1.connectDB)();
         app.listen(PORT, () => {
-            console.log(`🚀 Server running at http://localhost:${PORT}`);
+            console.log(`Server running at http://localhost:${PORT}`);
         });
     });
 }

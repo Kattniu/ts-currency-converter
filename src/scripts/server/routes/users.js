@@ -1,8 +1,8 @@
 "use strict";
 /**
  * FILE: routes/users.ts
- * PURPOSE: Maneja todas las rutas de la API para usuarios
- * (registro, login, y obtener lista de usuarios)
+ * PURPOSE: Handles all API routes for users
+ * (registration, login, and fetching user list)
  */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -18,103 +18,120 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userRoutes = void 0;
-// Importamos express para crear las rutas
+
+// Import express to create routes
 const express_1 = __importDefault(require("express"));
-// Importamos mongoose para conectar con MongoDB
+// Import mongoose to connect with MongoDB
 const mongoose_1 = __importDefault(require("mongoose"));
-// Creamos un "router" - es como un mini servidor que maneja
-// solo las rutas de usuarios
+
+// Create a "router" - it acts like a mini-server that handles
+// only user-related routes
 const router = express_1.default.Router();
 exports.userRoutes = router;
+
 // ============================================================
-// 1. SCHEMA - Le dice a MongoDB cómo guardar cada usuario
-// Es como una interfaz pero para la base de datos
+// 1. SCHEMA - Tells MongoDB how to store each user
+// Think of it as an interface but for the database
 // ============================================================
 const userSchema = new mongoose_1.default.Schema({
-    // Nombre completo - obligatorio
+    // Full name - mandatory
     fullName: { type: String, required: true },
-    // Email - obligatorio y único (no puede repetirse)
+    // Email - mandatory and unique (cannot be repeated)
     email: { type: String, required: true, unique: true },
-    // Contraseña - obligatoria
+    // Password - mandatory
     password: { type: String, required: true },
-    // Hora de registro - se llena automáticamente
+    // Registration time - filled automatically
     createdAt: { type: String, default: new Date().toLocaleTimeString() }
 });
+
 // ============================================================
-// 2. MODEL - Es la "colección" en MongoDB
-// Piénsalo como una tabla en una base de datos normal
-// Mongoose creará automáticamente una colección llamada "users"
+// 2. MODEL - This is the "collection" in MongoDB
+// Think of it like a table in a standard database
+// Mongoose will automatically create a collection named "users"
 // ============================================================
 const User = mongoose_1.default.model("User", userSchema);
+
 // ============================================================
-// 3. RUTAS - Son los "endpoints" que el frontend llama
+// 3. ROUTES - These are the "endpoints" called by the frontend
 // ============================================================
-// --- RUTA 1: POST /api/users ---
-// Se llama cuando alguien se registra en register.html
-// Guarda el nuevo usuario en MongoDB
+
+// --- ROUTE 1: POST /api/users ---
+// Called when someone registers in register.html
+// Saves the new user to MongoDB
 router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Leemos los datos que vienen del formulario de registro
+        // Read data coming from the registration form
         const { fullName, email, password } = req.body;
-        // Verificamos si el email ya existe en la base de datos
+        
+        // Check if the email already exists in the database
         const existing = yield User.findOne({ email });
         if (existing) {
-            // Si ya existe, devolvemos error 400
+            // If it exists, return a 400 error
             return res.status(400).json({ error: "Email already registered." });
         }
-        // Creamos el nuevo usuario con los datos del formulario
+        
+        // Create the new user with form data
         const newUser = new User({ fullName, email, password });
-        // Guardamos el usuario en MongoDB
+        
+        // Save the user in MongoDB
         yield newUser.save();
-        // Devolvemos éxito con los datos del usuario creado
+        
+        // Return success with the created user data
         res.status(201).json({
             message: "User registered successfully!",
             user: newUser
         });
     }
     catch (error) {
-        // Si algo sale mal en el servidor, devolvemos error 500
+        // If something goes wrong on the server, return a 500 error
         res.status(500).json({ error: "Server error." });
     }
 }));
-// --- RUTA 2: POST /api/users/login ---
-// Se llama cuando alguien intenta hacer login en login.html
-// Verifica que el email y contraseña sean correctos
+
+// --- ROUTE 2: POST /api/users/login ---
+// Called when someone tries to log in via login.html
+// Verifies that email and password are correct
 router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Leemos el email y contraseña que vienen del formulario
+        // Read email and password from the form
         const { email, password } = req.body;
-        // Buscamos el usuario por email en MongoDB
+        
+        // Find the user by email in MongoDB
         const user = yield User.findOne({ email });
-        // Si no encontramos el email, devolvemos error 404
+        
+        // If email is not found, return a 404 error
         if (!user) {
             return res.status(404).json({ error: "Email not found." });
         }
-        // Comparamos la contraseña ingresada con la guardada
-        // (En el futuro usaremos encriptación para más seguridad)
+        
+        // Compare the entered password with the stored one
+        // (In the future, use encryption for better security)
         if (user.password !== password) {
             return res.status(401).json({ error: "Incorrect password." });
         }
-        // Si todo está bien, devolvemos éxito con los datos del usuario
+        
+        // If everything is correct, return success with user data
         res.json({ message: "Login successful!", user });
     }
     catch (error) {
-        // Si algo sale mal en el servidor, devolvemos error 500
+        // If something goes wrong on the server, return a 500 error
         res.status(500).json({ error: "Server error." });
     }
 }));
-// --- RUTA 3: GET /api/users ---
-// Se llama cuando queremos ver todos los usuarios registrados
-// Por ejemplo para mostrar la lista en register.html
+
+// --- ROUTE 3: GET /api/users ---
+// Called when we want to see all registered users
+// For example, to display the list in register.html
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Buscamos todos los usuarios en MongoDB
+        // Find all users in MongoDB
         const users = yield User.find();
-        // Devolvemos la lista completa
+        
+        // Return the full list
         res.json(users);
     }
     catch (error) {
-        // Si algo sale mal en el servidor, devolvemos error 500
+        // If something goes wrong on the server, return a 500 error
         res.status(500).json({ error: "Server error." });
     }
 }));

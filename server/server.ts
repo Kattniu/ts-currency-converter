@@ -29,7 +29,7 @@ app.use("/api/conversions", conversionRoutes);
 async function startServer(): Promise<void> {
     await connectDB();
     app.listen(PORT, () => {
-        console.log(`🚀 Server running at http://localhost:${PORT}`);
+        console.log(`Server running at http://localhost:${PORT}`);
     });
 }
 

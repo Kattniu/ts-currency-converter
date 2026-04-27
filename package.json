@@ -1,11 +1,11 @@
 {
   "name": "ts-currency-converter",
   "version": "1.0.0",
-  "description": "",
+  "description": "Currency Converter Pro - Full Stack TypeScript App",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node src/index.ts",
+    "start": "ts-node server/server.ts",
     "build": "tsc"
   },
   "repository": {
@@ -13,7 +13,7 @@
     "url": "git+https://github.com/Kattniu/ts-currency-converter.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Katherine Gonzales",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {

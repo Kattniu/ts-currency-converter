@@ -174,7 +174,7 @@ btn === null || btn === void 0 ? void 0 : btn.addEventListener("click", () => __
         // "await" espera que el fetch termine antes de continuar
         // method POST significa que estamos ENVIANDO datos
         // body contiene los datos convertidos a formato JSON
-        yield fetch("http://localhost:3000/api/conversions", {
+        yield fetch("https://ts-currency-converter.onrender.com", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ from, to, amount, result })
@@ -225,7 +225,7 @@ function loadHistoryFromDB() {
         try {
             // Pedimos TODAS las conversiones guardadas en MongoDB
             // GET es el método por defecto de fetch — solo pide datos
-            const response = yield fetch("http://localhost:3000/api/conversions");
+            const response = yield fetch("https://ts-currency-converter.onrender.com");
             // Convertimos la respuesta a formato JSON (array de objetos)
             const conversions = yield response.json();
             // Limpiamos la lista antes de mostrar los datos

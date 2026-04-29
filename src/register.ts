@@ -95,7 +95,7 @@ async function updateUsersUI(): Promise<void> {
     try {
         // Pedimos todos los usuarios a nuestra API
         // GET es el método por defecto — solo pide datos sin enviar nada
-        const response = await fetch("http://localhost:3000/api/users");
+        const response = await fetch("https://ts-currency-converter.onrender.com");
 
         // Convertimos la respuesta a un array de objetos User
         const users: User[] = await response.json();
@@ -166,7 +166,7 @@ registerBtn?.addEventListener("click", async () => {
         // fetch con method POST significa que ENVIAMOS datos
         // headers dice que el formato es JSON
         // body contiene los datos convertidos a texto JSON
-        const response = await fetch("http://localhost:3000/api/users", {
+        const response = await fetch("https://ts-currency-converter.onrender.com", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ fullName, email, password })

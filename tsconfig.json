@@ -2,18 +2,28 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
-    "rootDir": "./",
-    "outDir": "./dist",
+    "rootDir": "./", //Desde aqui se leen los archivos
+    //Osea le dice a typescript : lee los archivos desde la raiz del proyecto
+    //recuerda que sin esto typescript no sabe desde donde empezar a leer asi como yo hehe
+    
+    "outDir": "./dist", //aqui guardamo los .js compilados 
+    //le dice : guarda todos los .js compilados en la carpeta dist/
+    // antes (espero que tenga sentido para ti(osea para mi)):
+    //server/server.ts  despues : dist/server/server.js
+
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true
   },
   "include": [
-    "server/**/*"
+    "server/**/*" //solo compila el servidor 
   ],
   "exclude": [
     "node_modules",
     "dist",
-    "src"
+    "src" //ignora el frontend 
+    //le dice a typescript : No compiles los archivos del frontend 
+    //porque ??? el frontend, index.ts, etc. necesita compilarse diferente con otro comando 
+    //No queremos mezclar  frontend y backnd en dist/
   ]
 }

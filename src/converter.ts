@@ -233,7 +233,7 @@ btn?.addEventListener("click", async () => {
         // "await" espera que el fetch termine antes de continuar
         // method POST significa que estamos ENVIANDO datos
         // body contiene los datos convertidos a formato JSON
-        await fetch("http://localhost:3000/api/conversions", {
+        await fetch("https://ts-currency-converter.onrender.com", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ from, to, amount, result })
@@ -289,7 +289,7 @@ async function loadHistoryFromDB(): Promise<void> {
     try {
         // Pedimos TODAS las conversiones guardadas en MongoDB
         // GET es el método por defecto de fetch — solo pide datos
-        const response = await fetch("http://localhost:3000/api/conversions");
+        const response = await fetch("https://ts-currency-converter.onrender.com");
 
         // Convertimos la respuesta a formato JSON (array de objetos)
         const conversions = await response.json();

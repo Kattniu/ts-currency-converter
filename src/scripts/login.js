@@ -48,7 +48,7 @@ loginBtn === null || loginBtn === void 0 ? void 0 : loginBtn.addEventListener("c
     }
     try {
         // Check if user exists in MongoDB via our API
-        const response = yield fetch("http://localhost:3000/api/users/login", {
+        const response = yield fetch("https://ts-currency-converter.onrender.com", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })

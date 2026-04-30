@@ -6,6 +6,9 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+
+import path from "path"; 
+
 import { connectDB } from "./db";
 import { userRoutes } from "./routes/users";
 import { conversionRoutes } from "./routes/convertions";
@@ -21,9 +24,20 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// --- 1. Servir archivos estáticos (CSS, JS del frontend, Imágenes) ---
+// Esto hace que si pides "styles/style.css", Express lo busque en "src/styles"
+app.use(express.static(path.join(process.cwd(), "src")));
+
+
 // --- Routes: connect URL paths to their handlers ---
 app.use("/api/users", userRoutes);
 app.use("/api/conversions", conversionRoutes);
+
+// --- 3. Servir el HTML principal ---
+// Cuando alguien entre a tu URL, le mandamos el index.html
+app.get("/", (req, res) => {
+    res.sendFile(path.join(process.cwd(), "src/pages/index.html"));
+});
 
 // --- Start: connects to DB then starts the server ---
 async function startServer(): Promise<void> {
@@ -34,3 +48,4 @@ async function startServer(): Promise<void> {
 }
 
 startServer();
+export default app;

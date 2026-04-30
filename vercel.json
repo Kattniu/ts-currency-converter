@@ -1,6 +1,19 @@
 {
-    "version": 2,
-    "buildCommand": "",
-    "outputDirectory": "src",
-    "installCommand": ""
+  "version": 2,
+  "builds": [
+    {
+      "src": "server/server.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "server/server.ts"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "server/server.ts"
+    }
+  ]
 }

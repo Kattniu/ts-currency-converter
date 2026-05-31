@@ -39,13 +39,3 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(process.cwd(), "src/pages/index.html"));
 });
 
-// --- Start: connects to DB then starts the server ---
-async function startServer(): Promise<void> {
-    await connectDB();
-    app.listen(PORT, () => {
-        console.log(`Server running at http://localhost:${PORT}`);
-    });
-}
-
-startServer();
-export default app;

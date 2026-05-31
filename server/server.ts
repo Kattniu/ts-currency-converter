@@ -16,7 +16,9 @@ app.use(express.json());
 
 // Sirve archivos estáticos
 app.use(express.static(path.join(process.cwd(), "src")));
-app.use(express.static(path.join(process.cwd(), "src/pages"))); // ← nuevo
+app.use(express.static(path.join(process.cwd(), "src/pages"))); 
+app.use(express.static(path.join(process.cwd(), "dist/src")));
+app.use(express.static(path.join(process.cwd(), "dist")));     
 
 app.use("/api/users", userRoutes);
 app.use("/api/conversions", conversionRoutes);

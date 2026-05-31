@@ -26,7 +26,9 @@ app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 // Sirve archivos estáticos
 app.use(express_1.default.static(path_1.default.join(process.cwd(), "src")));
-app.use(express_1.default.static(path_1.default.join(process.cwd(), "src/pages"))); // ← nuevo
+app.use(express_1.default.static(path_1.default.join(process.cwd(), "src/pages")));
+app.use(express_1.default.static(path_1.default.join(process.cwd(), "dist/src")));
+app.use(express_1.default.static(path_1.default.join(process.cwd(), "dist")));
 app.use("/api/users", users_1.userRoutes);
 app.use("/api/conversions", convertions_1.conversionRoutes);
 app.get("/", (req, res) => {

@@ -22,6 +22,13 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(process.cwd(), "src/pages/index.html"));
 });
 
+app.get("/health", (req, res) => {
+    res.json({ 
+        status: "ok",
+        database: "connected"
+    });
+});
+
 async function startServer(): Promise<void> {
     await connectDB();
     app.listen(PORT, () => {

@@ -24,17 +24,13 @@ const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
+// Sirve archivos estáticos
 app.use(express_1.default.static(path_1.default.join(process.cwd(), "src")));
+app.use(express_1.default.static(path_1.default.join(process.cwd(), "src/pages"))); // ← nuevo
 app.use("/api/users", users_1.userRoutes);
 app.use("/api/conversions", convertions_1.conversionRoutes);
 app.get("/", (req, res) => {
     res.sendFile(path_1.default.join(process.cwd(), "src/pages/index.html"));
-});
-app.get("/health", (req, res) => {
-    res.json({
-        status: "ok",
-        database: "connected"
-    });
 });
 function startServer() {
     return __awaiter(this, void 0, void 0, function* () {

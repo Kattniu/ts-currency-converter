@@ -50,7 +50,7 @@ loginBtn?.addEventListener("click", async () => {
 
     try {
         // Check if user exists in MongoDB via our API
-        const response = await fetch("https://ts-currency-converter.onrender.com", {
+        const response = await fetch("https://ts-currency-converter.onrender.com/api/users/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })
@@ -68,7 +68,7 @@ loginBtn?.addEventListener("click", async () => {
         localStorage.setItem("loggedUser", JSON.stringify(data.user));
 
         // Show success and redirect to converter
-        loginSuccess.innerHTML = `<p class="result-success">✅ Welcome ${data.user.fullName}! Redirecting...</p>`;
+        loginSuccess.innerHTML = `<p class="result-success">✅ Welcome :) ${data.user.fullName}! Redirecting...</p>`;
 
         setTimeout(() => {
             window.location.href = "converter.html";

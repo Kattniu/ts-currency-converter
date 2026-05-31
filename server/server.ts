@@ -13,20 +13,16 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+
+// Sirve archivos estáticos
 app.use(express.static(path.join(process.cwd(), "src")));
+app.use(express.static(path.join(process.cwd(), "src/pages"))); // ← nuevo
 
 app.use("/api/users", userRoutes);
 app.use("/api/conversions", conversionRoutes);
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(process.cwd(), "src/pages/index.html"));
-});
-
-app.get("/health", (req, res) => {
-    res.json({ 
-        status: "ok",
-        database: "connected"
-    });
 });
 
 async function startServer(): Promise<void> {

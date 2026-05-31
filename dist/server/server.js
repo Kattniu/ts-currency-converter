@@ -30,6 +30,12 @@ app.use("/api/conversions", convertions_1.conversionRoutes);
 app.get("/", (req, res) => {
     res.sendFile(path_1.default.join(process.cwd(), "src/pages/index.html"));
 });
+app.get("/health", (req, res) => {
+    res.json({
+        status: "ok",
+        database: "connected"
+    });
+});
 function startServer() {
     return __awaiter(this, void 0, void 0, function* () {
         yield (0, db_1.connectDB)();

@@ -1,4 +1,3 @@
-"use strict";
 /**
  * FILE: login.ts
  * PURPOSE: Handles user login and redirects to converter
@@ -33,7 +32,7 @@ function validateLogin(email, password) {
     return errors;
 }
 // --- Event Listener: fires when Login button is clicked ---
-loginBtn === null || loginBtn === void 0 ? void 0 : loginBtn.addEventListener("click", () => __awaiter(void 0, void 0, void 0, function* () {
+loginBtn === null || loginBtn === void 0 ? void 0 : loginBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
     // Clear previous messages
     loginError.innerHTML = "";
     loginSuccess.innerHTML = "";
@@ -49,7 +48,7 @@ loginBtn === null || loginBtn === void 0 ? void 0 : loginBtn.addEventListener("c
     }
     try {
         // Check if user exists in MongoDB via our API
-        const response = yield fetch("http://localhost:3000/api/users/login", {
+        const response = yield fetch("https://ts-currency-converter.onrender.com/api/users/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })
@@ -63,7 +62,7 @@ loginBtn === null || loginBtn === void 0 ? void 0 : loginBtn.addEventListener("c
         // Save user session in localStorage
         localStorage.setItem("loggedUser", JSON.stringify(data.user));
         // Show success and redirect to converter
-        loginSuccess.innerHTML = `<p class="result-success">✅ Welcome ${data.user.fullName}! Redirecting...</p>`;
+        loginSuccess.innerHTML = `<p class="result-success">✅ Welcome :) ${data.user.fullName}! Redirecting...</p>`;
         setTimeout(() => {
             window.location.href = "converter.html";
         }, 1500);

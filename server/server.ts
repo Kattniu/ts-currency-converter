@@ -39,3 +39,5 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(process.cwd(), "src/pages/index.html"));
 });
 
+connectDB();
+export default app;

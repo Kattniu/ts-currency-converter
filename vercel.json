@@ -4,20 +4,12 @@
     {
       "src": "server/server.ts",
       "use": "@vercel/node"
-    },
-    {
-      "src": "src/**/*",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "server/server.ts"
-    },
-    {
       "src": "/(.*)",
-      "dest": "src/$1"
+      "dest": "server/server.ts"
     }
   ]
 }

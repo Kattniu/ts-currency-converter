@@ -225,10 +225,6 @@ btn?.addEventListener("click", async () => {
         // con color verde usando la clase CSS "result-success"
         resultDisplay.innerHTML = `<h2 class="result-success">${result} ${to}</h2>`;
 
-        // Actualizamos la lista del historial en pantalla
-        // usando los datos guardados en MEMORIA (el array history)
-        updateHistoryUI();
-
         // 1. Conseguimos el usuario que inició sesión
         const loggedUser = localStorage.getItem("loggedUser") || "anonymous";
 

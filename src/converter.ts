@@ -229,14 +229,20 @@ btn?.addEventListener("click", async () => {
         // usando los datos guardados en MEMORIA (el array history)
         updateHistoryUI();
 
-        // Guardamos la conversión en MongoDB via nuestra API
-        // "await" espera que el fetch termine antes de continuar
-        // method POST significa que estamos ENVIANDO datos
-        // body contiene los datos convertidos a formato JSON
+        // 1. Conseguimos el usuario que inició sesión
+        const loggedUser = localStorage.getItem("loggedUser") || "anonymous";
+
+        // 2. Lo enviamos junto con los datos de la conversión
         await fetch("https://ts-currency-converter.onrender.com/api/conversions", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ from, to, amount, result })
+            body: JSON.stringify({ 
+                user: loggedUser, // ⬅️ Guardamos de quién es esta conversión
+                from, 
+                to, 
+                amount, 
+                result 
+            })
         });
 
     } catch (error: any) {
@@ -287,34 +293,36 @@ btn?.addEventListener("click", async () => {
 // ============================================================
 async function loadHistoryFromDB(): Promise<void> {
     try {
-        // Pedimos TODAS las conversiones guardadas en MongoDB
-        // GET es el método por defecto de fetch — solo pide datos
-        const response = await fetch("https://ts-currency-converter.onrender.com/api/conversions");
+        // 1. Obtenemos el usuario actual
+        const loggedUser = localStorage.getItem("loggedUser");
 
-        // Convertimos la respuesta a formato JSON (array de objetos)
+        // Si no hay nadie logueado, no hacemos nada
+        if (!loggedUser) return;
+
+        // 2. Pedimos todas las conversiones a MongoDB
+        const response = await fetch("https://ts-currency-converter.onrender.com/api/conversions");
         const conversions = await response.json();
 
-        // Limpiamos la lista antes de mostrar los datos
+        // Limpiamos la lista en la pantalla
         historyList.innerHTML = "";
 
-        // Recorremos cada conversión y creamos un <li> por cada una
-        conversions.forEach((item: any) => {
-            // "any" significa que TypeScript no verifica el tipo
-            // porque los datos vienen de MongoDB con formato desconocido
+        // 3. FILTRO: Nos quedamos SOLO con las que pertenecen al usuario logueado
+        const userConversions = conversions.filter((item: any) => item.user === loggedUser);
+
+        // 4. Dibujamos en el HTML solo las de este usuario
+        userConversions.forEach((item: any) => {
             const li = document.createElement("li");
             li.className = "history-item";
             li.innerHTML = `
                 <strong>${item.amount} ${item.from}</strong> ➡ 
                 ${item.result} ${item.to} 
                 <br> 
-                <small>${item.timestamp}</small>
+                <small>${item.timestamp || new Date().toLocaleTimeString()}</small>
             `;
             historyList.appendChild(li);
         });
 
     } catch (error) {
-        // Si el servidor no está corriendo o hay un error de red
-        // mostramos el error en la consola (F12) sin romper la app
         console.error("Could not load history:", error);
     }
 }

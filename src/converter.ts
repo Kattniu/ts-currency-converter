@@ -198,114 +198,105 @@ function updateHistoryUI(): void {
 
 // ============================================================
 // 5. EVENTO DEL BOTÓN CONVERT
-// Todo este código se ejecuta cuando el usuario
-// hace clic en el botón "Convert Now"
-// "async" es necesario porque usamos "await" dentro
+// Todo este código se ejecuta cuando el usuario hace clic en "Convert Now"
 // ============================================================
 btn?.addEventListener("click", async () => {
-    // El "?" significa "solo si el botón existe en el HTML"
-    // Evita errores si por alguna razón el botón no se encuentra
 
     try {
-        // Leemos el valor del campo de cantidad y lo convertimos a número
-        // parseFloat convierte "100.50" (texto) → 100.50 (número)
+        // Leemos el valor del campo de cantidad y lo convertimos a número flotante
         const amount = parseFloat(amountInput.value);
 
-        // Leemos la moneda seleccionada en el selector "From"
-        const from = fromSelect.value; // ejemplo: "PEN"
+        // Leemos las monedas origen y destino seleccionadas por el usuario
+        const from = fromSelect.value; // Ejemplo: "PEN"
+        const to = toSelect.value;     // Ejemplo: "USD"
 
-        // Leemos la moneda seleccionada en el selector "To"
-        const to = toSelect.value; // ejemplo: "USD"
-
-        // Llamamos al método convert de nuestra clase
-        // Si algo sale mal lanza un error que va al catch
+        // Calculamos el resultado usando el método convert de nuestra instancia de clase
         const result = myConverter.convert(amount, from, to);
 
-        // Mostramos el resultado en el div resultDisplay
-        // con color verde usando la clase CSS "result-success"
+        // Mostramos inmediatamente el resultado matemático en pantalla en color verde
         resultDisplay.innerHTML = `<h2 class="result-success">${result} ${to}</h2>`;
 
-        // 1. Conseguimos el usuario que inició sesión
-        const loggedUser = localStorage.getItem("loggedUser") || "anonymous";
+        // --- EXTRACCIÓN DEL NOMBRE REAL DEL USUARIO ---
+        // 1. Conseguimos los datos del usuario en crudo (formato texto string)
+        const loggedUserRaw = localStorage.getItem("loggedUser");
+        let userIdentifier = "anonymous";
 
-        // 2. Lo enviamos junto con los datos de la conversión
+        // Si hay una sesión iniciada, extraemos su nombre real con JSON.parse
+        if (loggedUserRaw) {
+            const parsedUser = JSON.parse(loggedUserRaw);
+            userIdentifier = parsedUser.fullName; // Guarda el nombre (Ej: "Katherine Gonzales Osorio")
+        }
+
+        // 2. Enviamos el registro completo a nuestra API en Render para guardarlo en MongoDB
         await fetch("https://ts-currency-converter.onrender.com/api/conversions", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ 
-                user: loggedUser, // ⬅️ Guardamos de quién es esta conversión
+                user: userIdentifier, // ⬅️ Ahora guardamos el nombre real del dueño en la BD
                 from, 
                 to, 
                 amount, 
-                result 
+                result,
+                timestamp: new Date().toLocaleTimeString() // Almacenamos la hora exacta de la acción
             })
         });
 
+        // 3. Forzamos una actualización inmediata del historial en pantalla
+        await loadHistoryFromDB();
+
     } catch (error: any) {
-        // Si convert() lanzó un error o el fetch falló
-        // mostramos el mensaje de error en rojo
+        // Si el cálculo falla o la red cae, imprimimos el mensaje de error en color rojo
         resultDisplay.innerHTML = `<p class="result-error">${error.message}</p>`;
     }
 });
 
 // ============================================================
-// 6. SESIÓN - Protege la página
-// Verifica que el usuario esté conectado antes de mostrar
-// el contenido. Si no hay sesión, manda al login.
-// Las llaves {} crean un bloque separado para evitar
-// conflictos de nombres de variables con otros archivos .ts
+// 6. SESIÓN - Protege la página (SE QUEDA EXACTAMENTE IGUAL)
+// Verifica que el usuario esté conectado antes de mostrar el contenido.
 // ============================================================
 {
-    // Buscamos en localStorage si hay un usuario guardado
-    // localStorage es como una memoria del navegador que
-    // persiste aunque cambies de página
-    // Devuelve null si no hay nada guardado
     const loggedUser = localStorage.getItem("loggedUser");
 
-    // Si loggedUser es null significa que NO hay sesión activa
-    // Redirigimos al login inmediatamente
     if (!loggedUser) {
         window.location.href = "login.html";
     }
 
-    // Seleccionamos el botón de logout del HTML
     const logoutBtn = document.getElementById("logoutBtn") as HTMLButtonElement;
 
-    // Cuando el usuario hace clic en Logout ejecutamos:
     logoutBtn?.addEventListener("click", () => {
-        // 1. Borramos el usuario de localStorage (cierra la sesión)
         localStorage.removeItem("loggedUser");
-
-        // 2. Redirigimos al login
         window.location.href = "login.html";
     });
 }
 
 // ============================================================
-// 7. FUNCIÓN loadHistoryFromDB
-// Carga el historial de conversiones desde MongoDB
-// Se llama cuando la página abre para mostrar conversiones
-// anteriores aunque el usuario haya cambiado de página
+// 7. FUNCIÓN loadHistoryFromDB (MODIFICADA CON FILTRO POR NOMBRE)
+// Carga el historial de conversiones filtrado desde MongoDB
 // ============================================================
 async function loadHistoryFromDB(): Promise<void> {
     try {
-        // 1. Obtenemos el usuario actual
-        const loggedUser = localStorage.getItem("loggedUser");
+        // 1. Obtenemos los datos de sesión en crudo (texto JSON)
+        const loggedUserRaw = localStorage.getItem("loggedUser");
+        
+        // Si no hay nadie logueado, cancelamos la carga de datos por seguridad
+        if (!loggedUserRaw) return;
 
-        // Si no hay nadie logueado, no hacemos nada
-        if (!loggedUser) return;
+        // Transformamos la cadena de texto en un objeto JSON real para extraer propiedades
+        const parsedUser = JSON.parse(loggedUserRaw);
+        const currentUser = parsedUser.fullName; // Extraemos el nombre (Ej: "Katherine Gonzales Osorio")
 
-        // 2. Pedimos todas las conversiones a MongoDB
+        // 2. Descargamos la lista completa de conversiones globales desde MongoDB
         const response = await fetch("https://ts-currency-converter.onrender.com/api/conversions");
         const conversions = await response.json();
 
-        // Limpiamos la lista en la pantalla
+        // Limpiamos el contenedor <ul> del HTML para reconstruirlo desde cero sin duplicados
         historyList.innerHTML = "";
 
-        // 3. FILTRO: Nos quedamos SOLO con las que pertenecen al usuario logueado
-        const userConversions = conversions.filter((item: any) => item.user === loggedUser);
+        // 3. ¡EL FILTRO PROTECTOR!: Dejamos pasar únicamente los documentos donde el campo 
+        // 'user' coincida exactamente con el nombre de pila del usuario actual
+        const userConversions = conversions.filter((item: any) => item.user === currentUser);
 
-        // 4. Dibujamos en el HTML solo las de este usuario
+        // 4. Recorremos con un forEach solo las conversiones que pasaron el filtro y las pintamos
         userConversions.forEach((item: any) => {
             const li = document.createElement("li");
             li.className = "history-item";
@@ -313,12 +304,13 @@ async function loadHistoryFromDB(): Promise<void> {
                 <strong>${item.amount} ${item.from}</strong> ➡ 
                 ${item.result} ${item.to} 
                 <br> 
-                <small>${item.timestamp || new Date().toLocaleTimeString()}</small>
+                <small>${item.timestamp || "Just now"}</small>
             `;
             historyList.appendChild(li);
         });
 
     } catch (error) {
+        // Manejo defensivo en consola si la base de datos de Render no responde
         console.error("Could not load history:", error);
     }
 }

@@ -23,6 +23,7 @@ const router = express_1.default.Router();
 exports.conversionRoutes = router;
 // --- Schema: defines the structure of a conversion in MongoDB ---
 const conversionSchema = new mongoose_1.default.Schema({
+    user: { type: String, default: "anonymous" },
     from: { type: String, required: true },
     to: { type: String, required: true },
     amount: { type: Number, required: true },

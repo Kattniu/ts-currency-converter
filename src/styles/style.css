@@ -268,7 +268,6 @@ button:not(.pass-btn):active {
 }
 .pass-btn:hover {
     color: #333;
-    transform: translateY(-50%) scale(1.1);
 }
 
 /* Solo aparece cuando tiene contenido */

@@ -1,17 +1,10 @@
-/**
- * FILE: ui/historyUI.ts
- * PURPOSE: Actualización del DOM para el historial
- */
-
-import { fetchUserConversions } from "../services/apiService";
-import { getLoggedUser } from "../auth/session";
-
-export async function loadHistoryFromDB(): Promise<void> {
+// Sin imports — usa funciones globales de otros scripts
+async function loadHistoryFromDB(): Promise<void> {
     try {
-        const user = getLoggedUser();
+        const user = getLoggedUser(); // ← viene de session.ts
         if (!user) return;
 
-        const conversions = await fetchUserConversions(user.fullName);
+        const conversions = await fetchUserConversions(user.fullName); // ← viene de apiService.ts
         const historyList = document.getElementById("historyList") as HTMLUListElement;
         historyList.innerHTML = "";
 
@@ -26,7 +19,6 @@ export async function loadHistoryFromDB(): Promise<void> {
             `;
             historyList.appendChild(li);
         });
-
     } catch (error) {
         console.error("Could not load history:", error);
     }

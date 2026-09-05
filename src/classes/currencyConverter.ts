@@ -1,13 +1,7 @@
-/**
- * FILE: classes/CurrencyConverter.ts
- * PURPOSE: Solo la clase matemática de conversión
- */
-
-import { CurrencyRates, LogEntry } from "../interfaces/types";
-
-export class CurrencyConverter {
-    private rates: CurrencyRates;
-    private history: LogEntry[] = [];
+// Sin imports — independiente
+class CurrencyConverter {
+    private rates: { [code: string]: number };
+    private history: any[] = [];
     private nextId: number = 1;
 
     constructor() {
@@ -44,7 +38,7 @@ export class CurrencyConverter {
         return finalResult;
     }
 
-    public getHistory(): LogEntry[] {
+    public getHistory(): any[] {
         return this.history;
     }
 }

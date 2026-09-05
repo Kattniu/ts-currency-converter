@@ -1,8 +1,4 @@
 "use strict";
-/**
- * FILE: register.ts
- * PURPOSE: Gerente de la página register — solo une todo
- */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -12,9 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const apiService_1 = require("./services/apiService");
-// Elementos del DOM
+// Sin imports
 const registerBtn = document.getElementById("registerBtn");
 const fullNameInput = document.getElementById("fullName");
 const emailInput = document.getElementById("email");
@@ -23,22 +17,20 @@ const errorDisplay = document.getElementById("errorDisplay");
 const successDisplay = document.getElementById("successDisplay");
 const usersList = document.getElementById("usersList");
 const togglePassword = document.getElementById("togglePassword");
-// Validación
 function validate(fullName, email, password) {
     const errors = [];
     if (fullName.trim() === "")
         errors.push("Full name is required.");
     if (!email.includes("@") || !email.includes("."))
-        errors.push("Please enter a valid email address.");
+        errors.push("Please enter a valid email.");
     if (password.length < 6)
         errors.push("Password must be at least 6 characters.");
     return errors;
 }
-// Mostrar usuarios
 function updateUsersUI() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const users = yield (0, apiService_1.fetchUsers)();
+            const users = yield fetchUsers(); // ← de apiService.ts
             usersList.innerHTML = "";
             users.forEach((user) => {
                 const li = document.createElement("li");
@@ -56,7 +48,6 @@ function updateUsersUI() {
         }
     });
 }
-// Registro
 registerBtn === null || registerBtn === void 0 ? void 0 : registerBtn.addEventListener("click", () => __awaiter(void 0, void 0, void 0, function* () {
     const fullName = fullNameInput.value;
     const email = emailInput.value;
@@ -71,13 +62,13 @@ registerBtn === null || registerBtn === void 0 ? void 0 : registerBtn.addEventLi
         return;
     }
     try {
-        const data = yield (0, apiService_1.registerUser)(fullName, email, password);
+        const data = yield registerUser(fullName, email, password); // ← de apiService.ts
         if (!data || data.error) {
             errorDisplay.innerHTML = `<p class="result-error">⚠️ ${data.error}</p>`;
             return;
         }
         successDisplay.innerHTML = `
-            <p class="result-success">✅ Welcome ${data.user.fullName}! Redirecting to login...</p>
+            <p class="result-success">✅ Welcome ${data.user.fullName}!</p>
         `;
         fullNameInput.value = "";
         emailInput.value = "";
@@ -91,7 +82,6 @@ registerBtn === null || registerBtn === void 0 ? void 0 : registerBtn.addEventLi
         errorDisplay.innerHTML = `<p class="result-error">⚠️ Could not connect to server.</p>`;
     }
 }));
-// Toggle password
 if (togglePassword)
     togglePassword.textContent = "View";
 togglePassword === null || togglePassword === void 0 ? void 0 : togglePassword.addEventListener("click", () => {

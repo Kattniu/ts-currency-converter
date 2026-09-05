@@ -1,11 +1,4 @@
-/**
- * FILE: register.ts
- * PURPOSE: Gerente de la página register — solo une todo
- */
-
-import { registerUser, fetchUsers } from "./services/apiService";
-
-// Elementos del DOM
+// Sin imports
 const registerBtn    = document.getElementById("registerBtn")    as HTMLButtonElement;
 const fullNameInput  = document.getElementById("fullName")       as HTMLInputElement;
 const emailInput     = document.getElementById("email")          as HTMLInputElement;
@@ -15,19 +8,17 @@ const successDisplay = document.getElementById("successDisplay") as HTMLDivEleme
 const usersList      = document.getElementById("usersList")      as HTMLUListElement;
 const togglePassword = document.getElementById("togglePassword") as HTMLButtonElement;
 
-// Validación
 function validate(fullName: string, email: string, password: string): string[] {
     const errors: string[] = [];
     if (fullName.trim() === "") errors.push("Full name is required.");
-    if (!email.includes("@") || !email.includes(".")) errors.push("Please enter a valid email address.");
+    if (!email.includes("@") || !email.includes(".")) errors.push("Please enter a valid email.");
     if (password.length < 6) errors.push("Password must be at least 6 characters.");
     return errors;
 }
 
-// Mostrar usuarios
 async function updateUsersUI(): Promise<void> {
     try {
-        const users = await fetchUsers();
+        const users = await fetchUsers(); // ← de apiService.ts
         usersList.innerHTML = "";
         users.forEach((user: any) => {
             const li = document.createElement("li");
@@ -44,7 +35,6 @@ async function updateUsersUI(): Promise<void> {
     }
 }
 
-// Registro
 registerBtn?.addEventListener("click", async () => {
     const fullName = fullNameInput.value;
     const email    = emailInput.value;
@@ -62,7 +52,7 @@ registerBtn?.addEventListener("click", async () => {
     }
 
     try {
-        const data = await registerUser(fullName, email, password);
+        const data = await registerUser(fullName, email, password); // ← de apiService.ts
 
         if (!data || data.error) {
             errorDisplay.innerHTML = `<p class="result-error">⚠️ ${data.error}</p>`;
@@ -70,7 +60,7 @@ registerBtn?.addEventListener("click", async () => {
         }
 
         successDisplay.innerHTML = `
-            <p class="result-success">✅ Welcome ${data.user.fullName}! Redirecting to login...</p>
+            <p class="result-success">✅ Welcome ${data.user.fullName}!</p>
         `;
 
         fullNameInput.value = "";
@@ -88,7 +78,6 @@ registerBtn?.addEventListener("click", async () => {
     }
 });
 
-// Toggle password
 if (togglePassword) togglePassword.textContent = "View";
 togglePassword?.addEventListener("click", () => {
     const type = passwordInput.type === "password" ? "text" : "password";

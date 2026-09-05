@@ -75,16 +75,6 @@
     // server/controllers/...    ✅
     // server/routes/...         ✅
 
-    "src/**/*"
-    // Compila TODO lo que está dentro de src/
-    // Entonces compila:
-    // src/converter.ts          ✅
-    // src/login.ts              ✅
-    // src/auth/session.ts       ✅
-    // src/classes/...           ✅
-    // src/services/...          ✅
-    // src/interfaces/...        ✅
-    // src/ui/...                ✅
   ],
 
   "exclude": [
@@ -97,9 +87,10 @@
     // node_modules tiene miles de archivos
     // No necesitamos compilarlos — ya vienen compilados
 
-    "dist"
+    "dist",
     // Ignora la carpeta de archivos compilados
     // Evita que TypeScript compile archivos
     // que él mismo ya compiló — causaría un loop infinito
+    "src"
   ]
 }

@@ -1,21 +1,12 @@
-/**
- * FILE: login.ts
- * PURPOSE: Gerente de la página login — solo une todo
- */
-
-import { loginUser } from "./services/apiService";
-import { saveUserSession } from "./auth/session";
-
-// Elementos del DOM
-const loginBtn      = document.getElementById("loginBtn")           as HTMLButtonElement;
-const loginEmail    = document.getElementById("loginEmail")         as HTMLInputElement;
-const loginPassword = document.getElementById("loginPassword")      as HTMLInputElement;
-const loginError    = document.getElementById("loginError")         as HTMLDivElement;
-const loginSuccess  = document.getElementById("loginSuccess")       as HTMLDivElement;
+// Sin imports
+const loginBtn            = document.getElementById("loginBtn")            as HTMLButtonElement;
+const loginEmail          = document.getElementById("loginEmail")          as HTMLInputElement;
+const loginPassword       = document.getElementById("loginPassword")       as HTMLInputElement;
+const loginError          = document.getElementById("loginError")          as HTMLDivElement;
+const loginSuccess        = document.getElementById("loginSuccess")        as HTMLDivElement;
 const toggleLoginPassword = document.getElementById("toggleLoginPassword") as HTMLButtonElement;
-const icon = toggleLoginPassword?.querySelector("i");
+const icon                = toggleLoginPassword?.querySelector("i");
 
-// Validación
 function validateLogin(email: string, password: string): string[] {
     const errors: string[] = [];
     if (email.trim() === "") errors.push("Email is required.");
@@ -23,7 +14,6 @@ function validateLogin(email: string, password: string): string[] {
     return errors;
 }
 
-// Login
 loginBtn?.addEventListener("click", async () => {
     loginError.innerHTML   = "";
     loginSuccess.innerHTML = "";
@@ -40,15 +30,15 @@ loginBtn?.addEventListener("click", async () => {
     }
 
     try {
-        const data = await loginUser(email, password);
+        const data = await loginUser(email, password); // ← de apiService.ts
 
         if (!data || data.error) {
             loginError.innerHTML = `<p class="result-error">⚠️ ${data.error}</p>`;
             return;
         }
 
-        saveUserSession(data.user);
-        loginSuccess.innerHTML = `<p class="result-success">✅ Welcome :) ${data.user.fullName}! Redirecting...</p>`;
+        saveUserSession(data.user); // ← de session.ts
+        loginSuccess.innerHTML = `<p class="result-success">✅ Welcome :) ${data.user.fullName}!</p>`;
 
         setTimeout(() => {
             window.location.href = "converter.html";
@@ -59,7 +49,6 @@ loginBtn?.addEventListener("click", async () => {
     }
 });
 
-// Toggle password
 toggleLoginPassword?.addEventListener("click", () => {
     if (loginPassword.type === "password") {
         loginPassword.type = "text";

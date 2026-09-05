@@ -1,15 +1,7 @@
-/**
- * FILE: index.ts
- * PURPOSE: Gerente de la página principal — solo une todo
- */
-
-import { WelcomeCurrency } from "./interfaces/types";
-
-// Elementos del DOM
+// Sin imports
 const currencyList = document.getElementById("currencyList") as HTMLUListElement;
 
-// Datos de monedas para la página de bienvenida
-const availableCurrencies: WelcomeCurrency[] = [
+const availableCurrencies = [
     { flag: "🇺🇸", code: "USD", name: "US Dollar" },
     { flag: "🇵🇪", code: "PEN", name: "Peruvian Sol" },
     { flag: "🇪🇺", code: "EUR", name: "Euro" },
@@ -19,10 +11,9 @@ const availableCurrencies: WelcomeCurrency[] = [
     { flag: "🇬🇧", code: "GBP", name: "British Pound" },
 ];
 
-// Construye la lista de monedas
 function renderCurrencyList(): void {
     currencyList.innerHTML = "";
-    availableCurrencies.forEach((currency: WelcomeCurrency) => {
+    availableCurrencies.forEach(currency => {
         const li = document.createElement("li");
         li.className = "history-item";
         li.innerHTML = `${currency.flag} <strong>${currency.code}</strong> — ${currency.name}`;
@@ -30,7 +21,6 @@ function renderCurrencyList(): void {
     });
 }
 
-// Service Worker para PWA
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
         navigator.serviceWorker

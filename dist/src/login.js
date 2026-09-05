@@ -1,8 +1,4 @@
 "use strict";
-/**
- * FILE: login.ts
- * PURPOSE: Gerente de la página login — solo une todo
- */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -12,10 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const apiService_1 = require("./services/apiService");
-const session_1 = require("./auth/session");
-// Elementos del DOM
+// Sin imports
 const loginBtn = document.getElementById("loginBtn");
 const loginEmail = document.getElementById("loginEmail");
 const loginPassword = document.getElementById("loginPassword");
@@ -23,7 +16,6 @@ const loginError = document.getElementById("loginError");
 const loginSuccess = document.getElementById("loginSuccess");
 const toggleLoginPassword = document.getElementById("toggleLoginPassword");
 const icon = toggleLoginPassword === null || toggleLoginPassword === void 0 ? void 0 : toggleLoginPassword.querySelector("i");
-// Validación
 function validateLogin(email, password) {
     const errors = [];
     if (email.trim() === "")
@@ -32,7 +24,6 @@ function validateLogin(email, password) {
         errors.push("Password is required.");
     return errors;
 }
-// Login
 loginBtn === null || loginBtn === void 0 ? void 0 : loginBtn.addEventListener("click", () => __awaiter(void 0, void 0, void 0, function* () {
     loginError.innerHTML = "";
     loginSuccess.innerHTML = "";
@@ -46,13 +37,13 @@ loginBtn === null || loginBtn === void 0 ? void 0 : loginBtn.addEventListener("c
         return;
     }
     try {
-        const data = yield (0, apiService_1.loginUser)(email, password);
+        const data = yield loginUser(email, password); // ← de apiService.ts
         if (!data || data.error) {
             loginError.innerHTML = `<p class="result-error">⚠️ ${data.error}</p>`;
             return;
         }
-        (0, session_1.saveUserSession)(data.user);
-        loginSuccess.innerHTML = `<p class="result-success">✅ Welcome :) ${data.user.fullName}! Redirecting...</p>`;
+        saveUserSession(data.user); // ← de session.ts
+        loginSuccess.innerHTML = `<p class="result-success">✅ Welcome :) ${data.user.fullName}!</p>`;
         setTimeout(() => {
             window.location.href = "converter.html";
         }, 1500);
@@ -61,7 +52,6 @@ loginBtn === null || loginBtn === void 0 ? void 0 : loginBtn.addEventListener("c
         loginError.innerHTML = `<p class="result-error">Could not connect to server.</p>`;
     }
 }));
-// Toggle password
 toggleLoginPassword === null || toggleLoginPassword === void 0 ? void 0 : toggleLoginPassword.addEventListener("click", () => {
     if (loginPassword.type === "password") {
         loginPassword.type = "text";

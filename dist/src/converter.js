@@ -8,36 +8,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-// converter.ts (30 líneas) ← muy pequeño ahora
-const currencyConverter_1 = require("./classes/currencyConverter");
-const apiService_1 = require("./services/apiService");
-const session_1 = require("./auth/session");
-const historyUI_1 = require("./ui/historyUI");
-(0, session_1.requireAuth)();
-const myConverter = new currencyConverter_1.CurrencyConverter();
-const btn = document.getElementById("convertBtn");
-const amountInput = document.getElementById("amount");
-const fromSelect = document.getElementById("fromCurrency");
-const toSelect = document.getElementById("toCurrency");
-const resultDisplay = document.getElementById("resultDisplay");
-const logoutBtn = document.getElementById("logoutBtn");
-logoutBtn === null || logoutBtn === void 0 ? void 0 : logoutBtn.addEventListener("click", session_1.logout);
-btn === null || btn === void 0 ? void 0 : btn.addEventListener("click", () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const amount = parseFloat(amountInput.value);
-        const from = fromSelect.value;
-        const to = toSelect.value;
-        const result = myConverter.convert(amount, from, to);
-        resultDisplay.innerHTML = `<h2 class="result-success">${result} ${to}</h2>`;
-        const user = (0, session_1.getLoggedUser)();
-        if (user) {
-            yield (0, apiService_1.saveConversion)(user.fullName, from, to, amount, result);
+(function () {
+    // Sin imports — usa funciones globales
+    requireAuth(); // ← de session.ts
+    const myConverter = new CurrencyConverter(); // ← de CurrencyConverter.ts
+    const btn = document.getElementById("convertBtn");
+    const amountInput = document.getElementById("amount");
+    const fromSelect = document.getElementById("fromCurrency");
+    const toSelect = document.getElementById("toCurrency");
+    const resultDisplay = document.getElementById("resultDisplay");
+    const logoutBtn = document.getElementById("logoutBtn");
+    logoutBtn === null || logoutBtn === void 0 ? void 0 : logoutBtn.addEventListener("click", logout); // ← de session.ts
+    btn === null || btn === void 0 ? void 0 : btn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
+        try {
+            const amount = parseFloat(amountInput.value);
+            const from = fromSelect.value;
+            const to = toSelect.value;
+            const result = myConverter.convert(amount, from, to);
+            resultDisplay.innerHTML = `<h2 class="result-success">${result} ${to}</h2>`;
+            const user = getLoggedUser(); // ← de session.ts
+            if (user) {
+                yield saveConversion(user.fullName, from, to, amount, result); // ← de apiService.ts
+            }
+            yield loadHistoryFromDB(); // ← de historyUI.ts
         }
-        yield (0, historyUI_1.loadHistoryFromDB)();
-    }
-    catch (error) {
-        resultDisplay.innerHTML = `<p class="result-error">${error.message}</p>`;
-    }
-}));
-(0, historyUI_1.loadHistoryFromDB)();
+        catch (error) {
+            resultDisplay.innerHTML = `<p class="result-error">${error.message}</p>`;
+        }
+    }));
+    loadHistoryFromDB();
+})();

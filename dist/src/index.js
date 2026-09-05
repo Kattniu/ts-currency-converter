@@ -1,12 +1,6 @@
 "use strict";
-/**
- * FILE: index.ts
- * PURPOSE: Gerente de la página principal — solo une todo
- */
-Object.defineProperty(exports, "__esModule", { value: true });
-// Elementos del DOM
+// Sin imports
 const currencyList = document.getElementById("currencyList");
-// Datos de monedas para la página de bienvenida
 const availableCurrencies = [
     { flag: "🇺🇸", code: "USD", name: "US Dollar" },
     { flag: "🇵🇪", code: "PEN", name: "Peruvian Sol" },
@@ -16,17 +10,15 @@ const availableCurrencies = [
     { flag: "🇧🇷", code: "BRL", name: "Brazilian Real" },
     { flag: "🇬🇧", code: "GBP", name: "British Pound" },
 ];
-// Construye la lista de monedas
 function renderCurrencyList() {
     currencyList.innerHTML = "";
-    availableCurrencies.forEach((currency) => {
+    availableCurrencies.forEach(currency => {
         const li = document.createElement("li");
         li.className = "history-item";
         li.innerHTML = `${currency.flag} <strong>${currency.code}</strong> — ${currency.name}`;
         currencyList.appendChild(li);
     });
 }
-// Service Worker para PWA
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
         navigator.serviceWorker

@@ -1,24 +1,22 @@
 /**
- * ARCHIVO: rates.ts
- * PROPÓSITO: Muestra la tabla de tasas de cambio dinámicamente
- * y verifica que el usuario esté conectado
+ * FILE: rates.ts
+ * PURPOSE: Gerente de la página rates — solo une todo
  */
 
-// ============================================================
-// 1. INTERFAZ - Define cómo debe verse cada moneda
-// Es como un molde que dice qué datos debe tener cada moneda
-// ============================================================
-interface CurrencyInfo {
-    code: string;   // Código de la moneda: "USD", "PEN", etc.
-    name: string;   // Nombre completo: "US Dollar", "Peruvian Sol"
-    rate: number;   // Tasa de cambio basada en 1 USD
-    flag: string;   // Emoji de la bandera del país
-}
+import { requireAuth, logout } from "./auth/session";
+import { CurrencyInfo } from "./interfaces/types";
 
-// ============================================================
-// 2. DATOS - Lista de todas las monedas disponibles
-// Cada objeto sigue el molde de la interfaz CurrencyInfo
-// ============================================================
+// Protege la página
+requireAuth();
+
+// Elementos del DOM
+const ratesBody = document.getElementById("ratesBody") as HTMLTableSectionElement;
+const logoutBtn = document.getElementById("logoutBtn") as HTMLButtonElement;
+
+// Logout
+logoutBtn?.addEventListener("click", logout);
+
+// Datos de monedas
 const currencies: CurrencyInfo[] = [
     { code: "USD", name: "US Dollar",      rate: 1.00,  flag: "🇺🇸" },
     { code: "PEN", name: "Peruvian Sol",   rate: 3.90,  flag: "🇵🇪" },
@@ -29,76 +27,21 @@ const currencies: CurrencyInfo[] = [
     { code: "GBP", name: "British Pound",  rate: 0.79,  flag: "🇬🇧" },
 ];
 
-// ============================================================
-// 3. DOM - Seleccionamos el elemento HTML donde va la tabla
-// getElementById busca el elemento por su id en el HTML
-// ============================================================
-const ratesBody = document.getElementById("ratesBody") as HTMLTableSectionElement;
-
-// ============================================================
-// 4. FUNCIÓN - Construye la tabla fila por fila
-// Se llama "dinámica" porque TypeScript genera las filas,
-// no están escritas a mano en el HTML
-// ============================================================
+// Construye la tabla
 function renderRatesTable(): void {
-    // Limpiamos la tabla antes de dibujarla
-    // (por si se llama más de una vez)
     ratesBody.innerHTML = "";
-
-    // Recorremos cada moneda del array currencies
     currencies.forEach(currency => {
-
-        // Creamos una fila <tr> nueva en HTML
         const row = document.createElement("tr");
-
-        // Si la moneda es USD la resaltamos en verde
-        // porque es la moneda base de todos los cálculos
         if (currency.code === "USD") {
             row.className = "base-currency-row";
         }
-
-        // Llenamos la fila con los datos de la moneda
-        // Cada <td> es una celda de la tabla
         row.innerHTML = `
             <td>${currency.flag} ${currency.name}</td>
             <td><strong>${currency.code}</strong></td>
             <td>${currency.rate.toFixed(2)}</td>
         `;
-
-        // Agregamos la fila al cuerpo de la tabla en el HTML
         ratesBody.appendChild(row);
     });
 }
 
-// ============================================================
-// 5. SESIÓN - Verifica que el usuario esté conectado
-// Las llaves {} crean un bloque separado para evitar
-// conflictos de nombres con otros archivos .ts
-// ============================================================
-{
-    // Buscamos en localStorage si hay un usuario conectado
-    // localStorage es como una memoria del navegador que
-    // guarda datos aunque cambies de página
-    const loggedUser = localStorage.getItem("loggedUser");
-
-    // Si NO hay usuario conectado, mandamos al login
-    if (!loggedUser) {
-        window.location.href = "login.html";
-    }
-
-    // Seleccionamos el botón de logout del HTML
-    const logoutBtn = document.getElementById("logoutBtn") as HTMLButtonElement;
-
-    // Cuando el usuario hace clic en Logout:
-    // 1. Borramos el usuario de localStorage (cierra sesión)
-    // 2. Mandamos al usuario de vuelta al login
-    logoutBtn?.addEventListener("click", () => {
-        localStorage.removeItem("loggedUser");
-        window.location.href = "login.html";
-    });
-}
-
-// ============================================================
-// 6. INICIO - Ejecutamos la función cuando carga la página
-// ============================================================
 renderRatesTable();

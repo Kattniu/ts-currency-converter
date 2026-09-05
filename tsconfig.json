@@ -1,29 +1,105 @@
 {
+  // El objeto principal que contiene toda la configuración
+  
   "compilerOptions": {
+    // ================================================================
+    // OPCIONES DEL COMPILADOR
+    // Le dicen a TypeScript CÓMO compilar
+    // ================================================================
+
     "target": "es6",
+    // ¿A qué versión de JavaScript convierte el código?
+    // es6 = ECMAScript 2015 — compatible con navegadores modernos
+    // Ejemplo: las arrow functions () => {} se mantienen igual
+    // Si pusiera "es5" las convertiría a function() {}
+
     "module": "commonjs",
-    "rootDir": "./", //Desde aqui se leen los archivos
-    //Osea le dice a typescript : lee los archivos desde la raiz del proyecto
-    //recuerda que sin esto typescript no sabe desde donde empezar a leer asi como yo hehe
-    
-    "outDir": "./dist", //aqui guardamo los .js compilados 
-    //le dice : guarda todos los .js compilados en la carpeta dist/
-    // antes (espero que tenga sentido para ti(osea para mi)):
-    //server/server.ts  despues : dist/server/server.js
+    // ¿Qué sistema de módulos usa?
+    // commonjs = el sistema de Node.js
+    // Convierte: import express from "express"
+    // En:        const express = require("express")
+    // Render y Node.js entienden commonjs
+
+    "rootDir": "./",
+    // ¿Desde dónde lee los archivos TypeScript?
+    // "./" significa la raíz del proyecto
+    // Entonces lee desde:
+    // ts-currency-converter/  ← aquí empieza
+    //   ├── server/
+    //   └── src/
+
+    "outDir": "./dist",
+    // ¿Dónde guarda los archivos JavaScript compilados?
+    // Respeta la misma estructura de carpetas
+    // Ejemplo:
+    // server/server.ts    →  dist/server/server.js
+    // src/login.ts        →  dist/src/login.js
+    // src/auth/session.ts →  dist/src/auth/session.js
 
     "strict": true,
+    // Activa el modo estricto de TypeScript
+    // Significa que TypeScript es más exigente con los tipos
+    // Ejemplo sin strict:
+    //   let nombre;  ← TypeScript lo permite
+    // Ejemplo con strict:
+    //   let nombre: string;  ← TypeScript exige el tipo
+
     "esModuleInterop": true,
+    // Permite importar módulos de CommonJS como si fueran ES6
+    // Sin esto tendríamos que escribir:
+    //   import * as express from "express"  ← feo
+    // Con esto podemos escribir:
+    //   import express from "express"  ← bonito
+
     "skipLibCheck": true
+    // Omite la verificación de tipos en archivos .d.ts
+    // Los .d.ts son archivos de definición de tipos
+    // de las librerías externas (express, mongoose, etc.)
+    // Esto hace que la compilación sea más rápida
+    // y evita errores en librerías que no controlamos
   },
+
   "include": [
-    "server/**/*" //solo compila el servidor 
+    // ================================================================
+    // ¿QUÉ ARCHIVOS COMPILA?
+    // ================================================================
+
+    "server/**/*",
+    // Compila TODO lo que está dentro de server/
+    // El ** significa "cualquier subcarpeta"
+    // El /* significa "cualquier archivo"
+    // Entonces compila:
+    // server/server.ts          ✅
+    // server/db.ts              ✅
+    // server/models/User.ts     ✅
+    // server/controllers/...    ✅
+    // server/routes/...         ✅
+
+    "src/**/*"
+    // Compila TODO lo que está dentro de src/
+    // Entonces compila:
+    // src/converter.ts          ✅
+    // src/login.ts              ✅
+    // src/auth/session.ts       ✅
+    // src/classes/...           ✅
+    // src/services/...          ✅
+    // src/interfaces/...        ✅
+    // src/ui/...                ✅
   ],
+
   "exclude": [
+    // ================================================================
+    // ¿QUÉ ARCHIVOS IGNORA?
+    // ================================================================
+
     "node_modules",
-    "dist",
-    "src" //ignora el frontend 
-    //le dice a typescript : No compiles los archivos del frontend 
-    //porque ??? el frontend, index.ts, etc. necesita compilarse diferente con otro comando 
-    //No queremos mezclar  frontend y backnd en dist/
+    // Ignora la carpeta de dependencias
+    // node_modules tiene miles de archivos
+    // No necesitamos compilarlos — ya vienen compilados
+
+    "dist"
+    // Ignora la carpeta de archivos compilados
+    // Evita que TypeScript compile archivos
+    // que él mismo ya compiló — causaría un loop infinito
   ]
 }

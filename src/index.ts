@@ -1,15 +1,14 @@
-// ============================================================
-// 1. DATA - Available currencies to display on welcome page
-// ============================================================
+/**
+ * FILE: index.ts
+ * PURPOSE: Gerente de la página principal — solo une todo
+ */
 
-// Interface that defines the structure of each currency
-interface WelcomeCurrency {
-    flag: string;
-    code: string;
-    name: string;
-}
+import { WelcomeCurrency } from "./interfaces/types";
 
-// List of all supported currencies
+// Elementos del DOM
+const currencyList = document.getElementById("currencyList") as HTMLUListElement;
+
+// Datos de monedas para la página de bienvenida
 const availableCurrencies: WelcomeCurrency[] = [
     { flag: "🇺🇸", code: "USD", name: "US Dollar" },
     { flag: "🇵🇪", code: "PEN", name: "Peruvian Sol" },
@@ -20,17 +19,9 @@ const availableCurrencies: WelcomeCurrency[] = [
     { flag: "🇬🇧", code: "GBP", name: "British Pound" },
 ];
 
-// ============================================================
-// 2. DOM LOGIC - Builds the currency list dynamically
-// ============================================================
-
-// Select the list element from HTML
-const currencyList = document.getElementById("currencyList") as HTMLUListElement;
-
-// --- Function: renders the available currencies as a dynamic list ---
+// Construye la lista de monedas
 function renderCurrencyList(): void {
     currencyList.innerHTML = "";
-
     availableCurrencies.forEach((currency: WelcomeCurrency) => {
         const li = document.createElement("li");
         li.className = "history-item";
@@ -39,7 +30,7 @@ function renderCurrencyList(): void {
     });
 }
 
-// --- Register Service Worker for PWA ---
+// Service Worker para PWA
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
         navigator.serviceWorker
@@ -48,5 +39,5 @@ if ("serviceWorker" in navigator) {
             .catch(err => console.log("❌ Service Worker error:", err));
     });
 }
-// Run when the page loads
+
 renderCurrencyList();

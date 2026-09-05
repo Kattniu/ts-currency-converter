@@ -1,8 +1,12 @@
 "use strict";
-// ============================================================
-// 1. DATA - Available currencies to display on welcome page
-// ============================================================
-// List of all supported currencies
+/**
+ * FILE: index.ts
+ * PURPOSE: Gerente de la página principal — solo une todo
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+// Elementos del DOM
+const currencyList = document.getElementById("currencyList");
+// Datos de monedas para la página de bienvenida
 const availableCurrencies = [
     { flag: "🇺🇸", code: "USD", name: "US Dollar" },
     { flag: "🇵🇪", code: "PEN", name: "Peruvian Sol" },
@@ -12,12 +16,7 @@ const availableCurrencies = [
     { flag: "🇧🇷", code: "BRL", name: "Brazilian Real" },
     { flag: "🇬🇧", code: "GBP", name: "British Pound" },
 ];
-// ============================================================
-// 2. DOM LOGIC - Builds the currency list dynamically
-// ============================================================
-// Select the list element from HTML
-const currencyList = document.getElementById("currencyList");
-// --- Function: renders the available currencies as a dynamic list ---
+// Construye la lista de monedas
 function renderCurrencyList() {
     currencyList.innerHTML = "";
     availableCurrencies.forEach((currency) => {
@@ -27,5 +26,13 @@ function renderCurrencyList() {
         currencyList.appendChild(li);
     });
 }
-// Run when the page loads
+// Service Worker para PWA
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker
+            .register("/service-worker.js")
+            .then(() => console.log("✅ Service Worker registered!"))
+            .catch(err => console.log("❌ Service Worker error:", err));
+    });
+}
 renderCurrencyList();

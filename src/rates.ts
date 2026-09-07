@@ -1,34 +1,34 @@
-(function() {
-    requireAuth();
+import { requireAuth, logout } from "./auth/session";
 
-    const ratesBody = document.getElementById("ratesBody") as HTMLTableSectionElement;
-    const logoutBtn = document.getElementById("logoutBtn") as HTMLButtonElement;
+requireAuth();
 
-    logoutBtn?.addEventListener("click", logout);
+const ratesBody = document.getElementById("ratesBody") as HTMLTableSectionElement;
+const logoutBtn = document.getElementById("logoutBtn") as HTMLButtonElement;
 
-    const currencies = [
-        { code: "USD", name: "US Dollar",      rate: 1.00,  flag: "🇺🇸" },
-        { code: "PEN", name: "Peruvian Sol",   rate: 3.90,  flag: "🇵🇪" },
-        { code: "EUR", name: "Euro",           rate: 0.87,  flag: "🇪🇺" },
-        { code: "MXN", name: "Mexican Peso",   rate: 17.00, flag: "🇲🇽" },
-        { code: "CLP", name: "Chilean Peso",   rate: 970.0, flag: "🇨🇱" },
-        { code: "BRL", name: "Brazilian Real", rate: 4.98,  flag: "🇧🇷" },
-        { code: "GBP", name: "British Pound",  rate: 0.79,  flag: "🇬🇧" },
-    ];
+logoutBtn?.addEventListener("click", logout);
 
-    function renderRatesTable(): void {
-        ratesBody.innerHTML = "";
-        currencies.forEach(currency => {
-            const row = document.createElement("tr");
-            if (currency.code === "USD") row.className = "base-currency-row";
-            row.innerHTML = `
-                <td>${currency.flag} ${currency.name}</td>
-                <td><strong>${currency.code}</strong></td>
-                <td>${currency.rate.toFixed(2)}</td>
-            `;
-            ratesBody.appendChild(row);
-        });
-    }
+const currencies = [
+    { code: "USD", name: "US Dollar",      rate: 1.00,  flag: "🇺🇸" },
+    { code: "PEN", name: "Peruvian Sol",   rate: 3.90,  flag: "🇵🇪" },
+    { code: "EUR", name: "Euro",           rate: 0.87,  flag: "🇪🇺" },
+    { code: "MXN", name: "Mexican Peso",   rate: 17.00, flag: "🇲🇽" },
+    { code: "CLP", name: "Chilean Peso",   rate: 970.0, flag: "🇨🇱" },
+    { code: "BRL", name: "Brazilian Real", rate: 4.98,  flag: "🇧🇷" },
+    { code: "GBP", name: "British Pound",  rate: 0.79,  flag: "🇬🇧" },
+];
 
-    renderRatesTable();
-})();
+function renderRatesTable(): void {
+    ratesBody.innerHTML = "";
+    currencies.forEach(currency => {
+        const row = document.createElement("tr");
+        if (currency.code === "USD") row.className = "base-currency-row";
+        row.innerHTML = `
+            <td>${currency.flag} ${currency.name}</td>
+            <td><strong>${currency.code}</strong></td>
+            <td>${currency.rate.toFixed(2)}</td>
+        `;
+        ratesBody.appendChild(row);
+    });
+}
+
+renderRatesTable();

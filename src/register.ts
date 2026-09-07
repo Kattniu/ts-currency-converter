@@ -1,4 +1,5 @@
-// Sin imports
+import { registerUser, fetchUsers } from "./services/apiService";
+
 const registerBtn    = document.getElementById("registerBtn")    as HTMLButtonElement;
 const fullNameInput  = document.getElementById("fullName")       as HTMLInputElement;
 const emailInput     = document.getElementById("email")          as HTMLInputElement;
@@ -18,7 +19,7 @@ function validate(fullName: string, email: string, password: string): string[] {
 
 async function updateUsersUI(): Promise<void> {
     try {
-        const users = await fetchUsers(); // ← de apiService.ts
+        const users = await fetchUsers();
         usersList.innerHTML = "";
         users.forEach((user: any) => {
             const li = document.createElement("li");
@@ -52,7 +53,7 @@ registerBtn?.addEventListener("click", async () => {
     }
 
     try {
-        const data = await registerUser(fullName, email, password); // ← de apiService.ts
+        const data = await registerUser(fullName, email, password);
 
         if (!data || data.error) {
             errorDisplay.innerHTML = `<p class="result-error">⚠️ ${data.error}</p>`;

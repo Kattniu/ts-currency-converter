@@ -1,38 +1,40 @@
-(function() {
-    // Sin imports — usa funciones globales
-    requireAuth(); // ← de session.ts
+import { CurrencyConverter } from "./classes/CurrencyConverter";
+import { saveConversion } from "./services/apiService";
+import { getLoggedUser, requireAuth, logout } from "./auth/session";
+import { loadHistoryFromDB } from "./ui/historyUI";
 
-    const myConverter = new CurrencyConverter(); // ← de CurrencyConverter.ts
+requireAuth();
 
-    const btn           = document.getElementById("convertBtn")    as HTMLButtonElement;
-    const amountInput   = document.getElementById("amount")        as HTMLInputElement;
-    const fromSelect    = document.getElementById("fromCurrency")  as HTMLSelectElement;
-    const toSelect      = document.getElementById("toCurrency")    as HTMLSelectElement;
-    const resultDisplay = document.getElementById("resultDisplay") as HTMLDivElement;
-    const logoutBtn     = document.getElementById("logoutBtn")     as HTMLButtonElement;
+const myConverter = new CurrencyConverter();
 
-    logoutBtn?.addEventListener("click", logout); // ← de session.ts
+const btn           = document.getElementById("convertBtn")    as HTMLButtonElement;
+const amountInput   = document.getElementById("amount")        as HTMLInputElement;
+const fromSelect    = document.getElementById("fromCurrency")  as HTMLSelectElement;
+const toSelect      = document.getElementById("toCurrency")    as HTMLSelectElement;
+const resultDisplay = document.getElementById("resultDisplay") as HTMLDivElement;
+const logoutBtn     = document.getElementById("logoutBtn")     as HTMLButtonElement;
 
-    btn?.addEventListener("click", async () => {
-        try {
-            const amount = parseFloat(amountInput.value);
-            const from = fromSelect.value;
-            const to = toSelect.value;
+logoutBtn?.addEventListener("click", logout);
 
-            const result = myConverter.convert(amount, from, to);
-            resultDisplay.innerHTML = `<h2 class="result-success">${result} ${to}</h2>`;
+btn?.addEventListener("click", async () => {
+    try {
+        const amount = parseFloat(amountInput.value);
+        const from = fromSelect.value;
+        const to = toSelect.value;
 
-            const user = getLoggedUser(); // ← de session.ts
-            if (user) {
-                await saveConversion(user.fullName, from, to, amount, result); // ← de apiService.ts
-            }
+        const result = myConverter.convert(amount, from, to);
+        resultDisplay.innerHTML = `<h2 class="result-success">${result} ${to}</h2>`;
 
-            await loadHistoryFromDB(); // ← de historyUI.ts
-
-        } catch (error: any) {
-            resultDisplay.innerHTML = `<p class="result-error">${error.message}</p>`;
+        const user = getLoggedUser();
+        if (user) {
+            await saveConversion(user.fullName, from, to, amount, result);
         }
-    });
 
-    loadHistoryFromDB();
-})();
+        await loadHistoryFromDB();
+
+    } catch (error: any) {
+        resultDisplay.innerHTML = `<p class="result-error">${error.message}</p>`;
+    }
+});
+
+loadHistoryFromDB();

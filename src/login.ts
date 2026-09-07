@@ -1,4 +1,6 @@
-// Sin imports
+import { loginUser } from "./services/apiService";
+import { saveUserSession } from "./auth/session";
+
 const loginBtn            = document.getElementById("loginBtn")            as HTMLButtonElement;
 const loginEmail          = document.getElementById("loginEmail")          as HTMLInputElement;
 const loginPassword       = document.getElementById("loginPassword")       as HTMLInputElement;
@@ -30,14 +32,14 @@ loginBtn?.addEventListener("click", async () => {
     }
 
     try {
-        const data = await loginUser(email, password); // ← de apiService.ts
+        const data = await loginUser(email, password);
 
         if (!data || data.error) {
             loginError.innerHTML = `<p class="result-error">⚠️ ${data.error}</p>`;
             return;
         }
 
-        saveUserSession(data.user); // ← de session.ts
+        saveUserSession(data.user);
         loginSuccess.innerHTML = `<p class="result-success">✅ Welcome :) ${data.user.fullName}!</p>`;
 
         setTimeout(() => {

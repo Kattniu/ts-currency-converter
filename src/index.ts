@@ -1,4 +1,3 @@
-// Sin imports
 const currencyList = document.getElementById("currencyList") as HTMLUListElement;
 
 const availableCurrencies = [

@@ -1,7 +1,8 @@
-// Sin imports — todo directo
+import { ConversionRecord } from "../interfaces/types";
+
 const API_URL = "https://ts-currency-converter.onrender.com";
 
-async function saveConversion(
+export async function saveConversion(
     user: string, from: string, to: string,
     amount: number, result: number
 ): Promise<void> {
@@ -15,14 +16,14 @@ async function saveConversion(
     });
 }
 
-async function fetchUserConversions(user: string): Promise<any[]> {
+export async function fetchUserConversions(user: string): Promise<ConversionRecord[]> {
     const response = await fetch(
         `${API_URL}/api/conversions?user=${encodeURIComponent(user)}`
     );
     return await response.json();
 }
 
-async function registerUser(
+export async function registerUser(
     fullName: string, email: string, password: string
 ): Promise<any> {
     const response = await fetch(`${API_URL}/api/users`, {
@@ -33,7 +34,7 @@ async function registerUser(
     return await response.json();
 }
 
-async function loginUser(email: string, password: string): Promise<any> {
+export async function loginUser(email: string, password: string): Promise<any> {
     const response = await fetch(`${API_URL}/api/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -42,7 +43,7 @@ async function loginUser(email: string, password: string): Promise<any> {
     return await response.json();
 }
 
-async function fetchUsers(): Promise<any[]> {
+export async function fetchUsers(): Promise<any[]> {
     const response = await fetch(`${API_URL}/api/users`);
     return await response.json();
 }

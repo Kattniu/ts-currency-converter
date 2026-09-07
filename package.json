@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build:server": "tsc",
-    "build:frontend": "tsc --project tsconfig.frontend.json",
-    "build": "tsc && tsc --project tsconfig.frontend.json",
-    "start": "node dist/server/server.js"
+    "build:frontend": "vite build",
+    "build": "tsc && vite build",
+    "start": "node dist/server/server.js",
+    "dev": "vite"
 },
   "repository": {
     "type": "git",
@@ -27,7 +28,8 @@
     "@types/express": "^5.0.6",
     "@types/node": "^25.5.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vite": "^8.2.2"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

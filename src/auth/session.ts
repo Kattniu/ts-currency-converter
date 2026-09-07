@@ -1,21 +1,22 @@
-// Sin imports — todo directo
-function getLoggedUser(): any | null {
+import { LoggedUser } from "../interfaces/types";
+
+export function getLoggedUser(): LoggedUser | null {
     const raw = localStorage.getItem("loggedUser");
     if (!raw) return null;
     return JSON.parse(raw);
 }
 
-function saveUserSession(user: any): void {
+export function saveUserSession(user: LoggedUser): void {
     localStorage.setItem("loggedUser", JSON.stringify(user));
 }
 
-function requireAuth(): void {
+export function requireAuth(): void {
     if (!getLoggedUser()) {
         window.location.href = "login.html";
     }
 }
 
-function logout(): void {
+export function logout(): void {
     localStorage.removeItem("loggedUser");
     window.location.href = "login.html";
 }

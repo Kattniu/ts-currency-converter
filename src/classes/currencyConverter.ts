@@ -1,7 +1,8 @@
-// Sin imports — independiente
-class CurrencyConverter {
-    private rates: { [code: string]: number };
-    private history: any[] = [];
+import { CurrencyRates, LogEntry } from "../interfaces/types";
+
+export class CurrencyConverter {
+    private rates: CurrencyRates;
+    private history: LogEntry[] = [];
     private nextId: number = 1;
 
     constructor() {
@@ -38,7 +39,7 @@ class CurrencyConverter {
         return finalResult;
     }
 
-    public getHistory(): any[] {
+    public getHistory(): LogEntry[] {
         return this.history;
     }
 }

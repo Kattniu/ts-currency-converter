@@ -14,22 +14,15 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Sirve el frontend compilado por Vite
+// Solo sirve desde dist/public — generado por Vite
 app.use(express.static(path.join(process.cwd(), "dist/public")));
 
+// Rutas de la API
 app.use("/api/users", userRoutes);
 app.use("/api/conversions", conversionRoutes);
 
-// Sirve archivos estáticos
-app.use(express.static(path.join(process.cwd(), "src")));
-app.use(express.static(path.join(process.cwd(), "src/pages"))); 
-app.use(express.static(path.join(process.cwd(), "dist/src")));
-app.use(express.static(path.join(process.cwd(), "dist")));     
-
-app.use("/api/users", userRoutes);
-app.use("/api/conversions", conversionRoutes);
-
-app.get("/", (req, res) => {
+//Cualquier ruta no encontrada sirve el index.html
+app.get("*", (req, res) => {
     res.sendFile(path.join(process.cwd(), "dist/public/src/pages/index.html"));
 });
 

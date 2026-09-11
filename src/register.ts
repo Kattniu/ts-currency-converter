@@ -2,6 +2,7 @@ import { registerUser, fetchUsers } from "./services/apiService";
 
 const registerBtn    = document.getElementById("registerBtn")    as HTMLButtonElement;
 const fullNameInput  = document.getElementById("fullName")       as HTMLInputElement;
+const lastNameInput  = document.getElementById("lastName")       as HTMLInputElement;
 const emailInput     = document.getElementById("email")          as HTMLInputElement;
 const passwordInput  = document.getElementById("password")       as HTMLInputElement;
 const errorDisplay   = document.getElementById("errorDisplay")   as HTMLDivElement;
@@ -9,11 +10,47 @@ const successDisplay = document.getElementById("successDisplay") as HTMLDivEleme
 const usersList      = document.getElementById("usersList")      as HTMLUListElement;
 const togglePassword = document.getElementById("togglePassword") as HTMLButtonElement;
 
-function validate(fullName: string, email: string, password: string): string[] {
+function validate(
+    firstName: string, 
+    lastName: string, 
+    email: string, 
+    password: string
+): string[] {
     const errors: string[] = [];
-    if (fullName.trim() === "") errors.push("Full name is required.");
-    if (!email.includes("@") || !email.includes(".")) errors.push("Please enter a valid email.");
-    if (password.length < 6) errors.push("Password must be at least 6 characters.");
+
+    // Nombre — solo letras, mínimo 2 caracteres
+    if (firstName.trim().length < 2) {
+        errors.push("First name must be at least 2 characters.");
+    }
+    if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(firstName.trim())) {
+        errors.push("First name can only contain letters.");
+    }
+
+    // Apellido — solo letras, mínimo 2 caracteres
+    if (lastName.trim().length < 2) {
+        errors.push("Last name must be at least 2 characters.");
+    }
+    if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(lastName.trim())) {
+        errors.push("Last name can only contain letters.");
+    }
+
+    // Email — formato válido
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        errors.push("Please enter a valid email address.");
+    }
+
+    // Contraseña — mínimo 8 caracteres, una mayúscula, un número
+    if (password.length < 8) {
+        errors.push("Password must be at least 8 characters.");
+    }
+    if (!/[A-Z]/.test(password)) {
+        errors.push("Password must contain at least one uppercase letter.");
+    }
+    if (!/[0-9]/.test(password)) {
+        errors.push("Password must contain at least one number.");
+    }
+
     return errors;
 }
 
@@ -37,14 +74,16 @@ async function updateUsersUI(): Promise<void> {
 }
 
 registerBtn?.addEventListener("click", async () => {
-    const fullName = fullNameInput.value;
-    const email    = emailInput.value;
-    const password = passwordInput.value;
+    const firstName = fullNameInput.value;
+    const lastName  = lastNameInput.value;
+    const fullName  = `${firstName.trim()} ${lastName.trim()}`;
+    const email     = emailInput.value;
+    const password  = passwordInput.value;
 
     errorDisplay.innerHTML   = "";
     successDisplay.innerHTML = "";
 
-    const errors = validate(fullName, email, password);
+    const errors = validate(firstName, lastName, email, password);
     if (errors.length > 0) {
         errorDisplay.innerHTML = errors
             .map(e => `<p class="result-error">⚠️ ${e}</p>`)
@@ -65,6 +104,7 @@ registerBtn?.addEventListener("click", async () => {
         `;
 
         fullNameInput.value = "";
+        lastNameInput.value = "";
         emailInput.value    = "";
         passwordInput.value = "";
 

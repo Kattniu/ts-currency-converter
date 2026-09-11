@@ -1,4 +1,4 @@
-import { registerUser, fetchUsers } from "./services/apiService";
+import { registerUser } from "./services/apiService";
 
 const registerBtn    = document.getElementById("registerBtn")    as HTMLButtonElement;
 const fullNameInput  = document.getElementById("fullName")       as HTMLInputElement;
@@ -7,70 +7,29 @@ const emailInput     = document.getElementById("email")          as HTMLInputEle
 const passwordInput  = document.getElementById("password")       as HTMLInputElement;
 const errorDisplay   = document.getElementById("errorDisplay")   as HTMLDivElement;
 const successDisplay = document.getElementById("successDisplay") as HTMLDivElement;
-const usersList      = document.getElementById("usersList")      as HTMLUListElement;
 const togglePassword = document.getElementById("togglePassword") as HTMLButtonElement;
 
 function validate(
-    firstName: string, 
-    lastName: string, 
-    email: string, 
+    firstName: string,
+    lastName: string,
+    email: string,
     password: string
 ): string[] {
     const errors: string[] = [];
 
-    // Nombre — solo letras, mínimo 2 caracteres
-    if (firstName.trim().length < 2) {
-        errors.push("First name must be at least 2 characters.");
-    }
-    if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(firstName.trim())) {
-        errors.push("First name can only contain letters.");
-    }
+    if (firstName.trim().length < 2) errors.push("First name must be at least 2 characters.");
+    if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(firstName.trim())) errors.push("First name can only contain letters.");
+    if (lastName.trim().length < 2) errors.push("Last name must be at least 2 characters.");
+    if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(lastName.trim())) errors.push("Last name can only contain letters.");
 
-    // Apellido — solo letras, mínimo 2 caracteres
-    if (lastName.trim().length < 2) {
-        errors.push("Last name must be at least 2 characters.");
-    }
-    if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(lastName.trim())) {
-        errors.push("Last name can only contain letters.");
-    }
-
-    // Email — formato válido
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        errors.push("Please enter a valid email address.");
-    }
+    if (!emailRegex.test(email)) errors.push("Please enter a valid email address.");
 
-    // Contraseña — mínimo 8 caracteres, una mayúscula, un número
-    if (password.length < 8) {
-        errors.push("Password must be at least 8 characters.");
-    }
-    if (!/[A-Z]/.test(password)) {
-        errors.push("Password must contain at least one uppercase letter.");
-    }
-    if (!/[0-9]/.test(password)) {
-        errors.push("Password must contain at least one number.");
-    }
+    if (password.length < 8) errors.push("Password must be at least 8 characters.");
+    if (!/[A-Z]/.test(password)) errors.push("Password must contain at least one uppercase letter.");
+    if (!/[0-9]/.test(password)) errors.push("Password must contain at least one number.");
 
     return errors;
-}
-
-async function updateUsersUI(): Promise<void> {
-    try {
-        const users = await fetchUsers();
-        usersList.innerHTML = "";
-        users.forEach((user: any) => {
-            const li = document.createElement("li");
-            li.className = "history-item";
-            li.innerHTML = `
-                👤 <strong>${user.fullName}</strong> — ${user.email}
-                <br>
-                <small>Registered at: ${user.createdAt}</small>
-            `;
-            usersList.appendChild(li);
-        });
-    } catch (error) {
-        console.error("Could not load users:", error);
-    }
 }
 
 registerBtn?.addEventListener("click", async () => {
@@ -108,8 +67,6 @@ registerBtn?.addEventListener("click", async () => {
         emailInput.value    = "";
         passwordInput.value = "";
 
-        updateUsersUI();
-
         setTimeout(() => {
             window.location.href = "/src/pages/login.html";
         }, 2000);
@@ -125,5 +82,3 @@ togglePassword?.addEventListener("click", () => {
     passwordInput.type = type;
     togglePassword.textContent = type === "password" ? "View" : "Hide";
 });
-
-updateUsersUI();

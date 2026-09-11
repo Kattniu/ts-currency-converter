@@ -22,7 +22,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/conversions", conversionRoutes);
 
 //Cualquier ruta no encontrada sirve el index.html
-app.get("*", (req, res) => {
+app.get("/{*path}", (req, res) => {
     res.sendFile(path.join(process.cwd(), "dist/public/src/pages/index.html"));
 });
 

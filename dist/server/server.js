@@ -30,7 +30,7 @@ app.use(express_1.default.static(path_1.default.join(process.cwd(), "dist/public
 app.use("/api/users", users_1.userRoutes);
 app.use("/api/conversions", convertions_1.conversionRoutes);
 //Cualquier ruta no encontrada sirve el index.html
-app.get("*", (req, res) => {
+app.get("/{*path}", (req, res) => {
     res.sendFile(path_1.default.join(process.cwd(), "dist/public/src/pages/index.html"));
 });
 function startServer() {

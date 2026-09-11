@@ -24,6 +24,10 @@ const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
+// Sirve el frontend compilado por Vite
+app.use(express_1.default.static(path_1.default.join(process.cwd(), "dist/public")));
+app.use("/api/users", users_1.userRoutes);
+app.use("/api/conversions", convertions_1.conversionRoutes);
 // Sirve archivos estáticos
 app.use(express_1.default.static(path_1.default.join(process.cwd(), "src")));
 app.use(express_1.default.static(path_1.default.join(process.cwd(), "src/pages")));
@@ -32,7 +36,7 @@ app.use(express_1.default.static(path_1.default.join(process.cwd(), "dist")));
 app.use("/api/users", users_1.userRoutes);
 app.use("/api/conversions", convertions_1.conversionRoutes);
 app.get("/", (req, res) => {
-    res.sendFile(path_1.default.join(process.cwd(), "src/pages/index.html"));
+    res.sendFile(path_1.default.join(process.cwd(), "dist/public/src/pages/index.html"));
 });
 function startServer() {
     return __awaiter(this, void 0, void 0, function* () {

@@ -43,7 +43,7 @@ loginBtn?.addEventListener("click", async () => {
         loginSuccess.innerHTML = `<p class="result-success">✅ Welcome :) ${data.user.fullName}!</p>`;
 
         setTimeout(() => {
-            window.location.href = "converter.html";
+            window.location.href = "/src/pages/converter.html";
         }, 1500);
 
     } catch (error) {

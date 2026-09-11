@@ -71,7 +71,7 @@ registerBtn?.addEventListener("click", async () => {
         updateUsersUI();
 
         setTimeout(() => {
-            window.location.href = "login.html";
+            window.location.href = "/src/pages/login.html";
         }, 2000);
 
     } catch (error) {

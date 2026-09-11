@@ -12,11 +12,11 @@ export function saveUserSession(user: LoggedUser): void {
 
 export function requireAuth(): void {
     if (!getLoggedUser()) {
-        window.location.href = "login.html";
+        window.location.href = "/src/pages/login.html";
     }
 }
 
 export function logout(): void {
     localStorage.removeItem("loggedUser");
-    window.location.href = "login.html";
+    window.location.href = "/src/pages/login.html";
 }

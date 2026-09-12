@@ -29,6 +29,14 @@ app.use(express_1.default.static(path_1.default.join(process.cwd(), "dist/public
 // Rutas de la API
 app.use("/api/users", users_1.userRoutes);
 app.use("/api/conversions", convertions_1.conversionRoutes);
+// Sirve manifest.json
+app.get("/manifest.json", (req, res) => {
+    res.sendFile(path_1.default.join(process.cwd(), "manifest.json"));
+});
+// Sirve service-worker.js
+app.get("/service-worker.js", (req, res) => {
+    res.sendFile(path_1.default.join(process.cwd(), "service-worker.js"));
+});
 //Cualquier ruta no encontrada sirve el index.html
 app.get("/{*path}", (req, res) => {
     res.sendFile(path_1.default.join(process.cwd(), "dist/public/src/pages/index.html"));

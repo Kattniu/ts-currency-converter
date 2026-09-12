@@ -7,6 +7,12 @@ export async function loadHistoryFromDB(): Promise<void> {
         if (!user) return;
 
         const conversions = await fetchUserConversions(user.fullName);
+        // esto verifica que sea un array antes de hacer forEach
+        if (!Array.isArray(conversions)) {
+            console.error("Invalid response from server");
+            return;
+        }
+
         const historyList = document.getElementById("historyList") as HTMLUListElement;
         historyList.innerHTML = "";
 

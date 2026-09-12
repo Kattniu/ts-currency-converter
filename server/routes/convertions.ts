@@ -5,10 +5,11 @@
 
 import express from "express";
 import { saveConversion, getConversions } from "../controllers/conversionController";
+import { verifyToken } from "../middleware/auth";
 
 const router = express.Router();
 
-router.post("/", saveConversion);
-router.get("/", getConversions);
+router.post("/", verifyToken, saveConversion);
+router.get("/", verifyToken, getConversions);
 
 export { router as conversionRoutes };

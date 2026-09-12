@@ -1,6 +1,15 @@
 import { ConversionRecord } from "../interfaces/types";
+import { getToken } from "../auth/session";
 
 const API_URL = "https://ts-currency-converter.onrender.com";
+
+// Headers con token
+function authHeaders() {
+    return {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${getToken()}`
+    };
+}
 
 export async function saveConversion(
     user: string, from: string, to: string,

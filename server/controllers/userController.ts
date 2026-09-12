@@ -2,9 +2,9 @@
  * CONTROLLER: userController.ts
  * PURPOSE: Contiene toda la lógica de usuarios
  */
-
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import User from "../models/User";
 
 // --- Registrar usuario ---

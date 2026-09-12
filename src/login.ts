@@ -39,7 +39,7 @@ loginBtn?.addEventListener("click", async () => {
             return;
         }
 
-        saveUserSession(data.user);
+        saveUserSession(data.user, data.token); // Guarda el token en la sesión del usuario
         loginSuccess.innerHTML = `<p class="result-success">✅ Welcome :) ${data.user.fullName}!</p>`;
 
         setTimeout(() => {

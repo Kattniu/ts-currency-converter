@@ -17,7 +17,7 @@ export async function saveConversion(
 ): Promise<void> {
     await fetch(`${API_URL}/api/conversions`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(), // ← usa authHeaders
         body: JSON.stringify({
             user, from, to, amount, result,
             timestamp: new Date().toLocaleTimeString()
@@ -27,7 +27,8 @@ export async function saveConversion(
 
 export async function fetchUserConversions(user: string): Promise<ConversionRecord[]> {
     const response = await fetch(
-        `${API_URL}/api/conversions?user=${encodeURIComponent(user)}`
+        `${API_URL}/api/conversions?user=${encodeURIComponent(user)}`,
+        { headers: authHeaders() } // ← usa authHeaders
     );
     return await response.json();
 }

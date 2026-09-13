@@ -1,5 +1,5 @@
 // Nombre del cache — si cambias tu app cambia este nombre
-const CACHE_NAME = "currency-converter-v1";
+const CACHE_NAME = "currency-converter-v2";
 
 // Lista de archivos que se guardan en el celular
 const FILES_TO_CACHE = [
